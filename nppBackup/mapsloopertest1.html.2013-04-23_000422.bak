@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>google maps markers array method</title>
+	<link rel="stylesheet" type="text/css" href="menu111.css">
+	<style type="text/css">#map { width: 600px; height: 600px; border: 10px solid #000; border-radius: 9px; box-shadow: 10px 8px 5px #888888; float: left;} 
+	  #info { width: 450px; float: left; margin: 30px;}
+      .underline1 { text-decoration:underline; }
+	  #widthsetter { width: 250px; }
+    </style>
+	
+	<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?v=3&sensor=false"></script>
+	<script src="jquery-1.7.2.min.js"></script>
+	<script src="nav1.1.min.js"></script>
+	
+	<script>
+		$(document).ready(function() {
+			$('#navigation').navPlugin( {
+			  'itemWidth' : 200,
+			  'itemHeight' : 30,
+			  'navEffect' : 'slide',
+			  'speed' : 250
+			});
+		}); // end ready
+    </script>	
+
+	<script type="text/javascript">
+	
+	(function() {
+window.onload = function() {
+  var mapDiv = document.getElementById("map");
+  var centerlatlng = new google.maps.LatLng(39.730822,-104.917231 );
+  var options = {
+    center: centerlatlng,
+    zoom: 8,
+    mapTypeId: google.maps.MapTypeId.TERRAIN
+  };
+  var map = new google.maps.Map( mapDiv, options);
+  
+  
+  // it is usually better to create one infowindow and resuse it by setting the content on click
+  //this also makes it so when you click a different marker it closes the infowindow on the old one and puts it on the new one
+  var infowindow = new google.maps.InfoWindow();
+  var i, marker;
+  
+  var centerContent = '<h2>Center Marker</h2>' + '<p>This shows you can use a string in a variable for' + '<br>' + 
+                      'the2nd index of the places array. This might be easier' +'<br>'+ 
+					  'if their is a lot of content in the infowindow,' +'<br>'+ 
+					  'so the array is easier to read</p>';
+	
+  var centerContent2 = '<div id="widthsetter">Notice that this text only goes a certain length and you do not have to put all those break tags in, ' + 
+                        'you can just keep typing and it will wrap. it is done by setting a width on the div around this text.';
+
+  var places = [
+    [ "NW", new google.maps.LatLng(40.065461,-105.562134), "This is NW" ],
+    [ "NE", new google.maps.LatLng(40.031821,-104.210815), "This is NE" ],
+    [ "SW", new google.maps.LatLng(39.185433,-105.578613), "This is SW" ],
+    [ "SE", new google.maps.LatLng(39.134321,-104.205322), "This is SE" ],
+	[ "Center", new google.maps.LatLng(39.787434,-104.990845), centerContent ],
+	[ "Center2", new google.maps.LatLng(39.759991,-104.93866), centerContent2 ]
+  ];
+  
+  
+  //there is closure stuff happening in the event listener part, it has to do with accessing variables values
+    for ( var i = 0; i < places.length; i++ ) {
+      var marker = new google.maps.Marker( {
+        position : places[i][1],
+        map : map,
+        title : places[i][0]
+      });
+	
+	  (function( i, marker ) {  //start self executing function
+        google.maps.event.addListener( marker, "click", function() {
+          infowindow.setContent( places[i][2] );
+          infowindow.open(map, marker);
+        });  //end add listener
+		
+		var zz = [];
+		zz.push( 'test' + i );
+		
+			    document.getElementById(zz[i]).onclick = function() {
+				  infowindow.setContent( places[i][2] );
+				  infowindow.open(map, marker);
+                }  //end onclick
+		
+      })( i, marker );  //end self executing function
+	}  //end for loop
+	
+	
+	
+	
+	
+	    document.getElementById("test1a").onclick = function() {
+
+    }  //end onclick
+	
+	
+  
+  
+}  //end onload
+})();  //end self executing code encapsulating function
+	
+	</script>
+	
+	
+	
+	
+	
+  </head>
+  
+  
+  <body>
+  
+  <div id="navigation1">
+  <ul id="navigation">
+	<li><a href="#">Overlays</a>
+	  <ul>
+	    <li><a href="google-maps-markers-windows-options.html">Markers, Windows, Options</a></li>
+		<li><a href="google-maps-markers-array-method.html">Markers Array Method</a></li>
+		<li><a href="google-maps-polylines-polygons.html">Polylines and Polygons</a></li>
+	  </ul>
+	</li> 
+	<li><a href="#">Layers and Services</a>
+	  <ul>
+	    <li><a href="google-maps-street-view.html">Steetview</a></li>
+		<li><a href="google-maps-elevation-service.html">Elevation Service</a></li>
+		<li><a href="google-maps-services.html">Services</a></li>
+		<li><a href="google-maps-layers.html">Layers</a></li>
+		<li><a href="google-maps-panoramio-layer.html">Panoramio Layer</a></li>
+	  </ul>
+	</li>
+    <li><a href="#">Utilities</a>
+	  <ul>
+	    <li><a href="google-maps-info-utility-1.html">Info Utility</a></li>
+		<li><a href="google-maps-geocoding.html">Geocoding</a></li>
+	  </ul>
+	</li>  
+	<li><a href="#">Other</a>
+	  <ul>
+	    <li><a href="google-map-basic-template.html">Basic Template</a></li>
+		<li><a href="google-maps-styled-map.html">Styled Map</a></li>
+		<li><a href="google-charts.html">Charts</a></li>
+		<li><a href="google-maps-bounds-marker-on-click-with-draggable.html">Bounds, Marker on click</a></li>
+	  </ul>
+    </li>
+  </ul>
+  </div>
+  <h2 class="clearit">Google Maps Array Method</h2>
+
+
+  
+  
+    <div id="map"></div>
+  
+    <div id="info">
+	<label><input type="button" value="a button to use" id="test1" />put whatever functionality on it</label><br>
+        <p>This page has markers that are created from an array, which is generally easier if there are lots of markers. There is only one infowindow open at
+		a time as well.</p>
+	</div>
+  
+  </body>
+</html>

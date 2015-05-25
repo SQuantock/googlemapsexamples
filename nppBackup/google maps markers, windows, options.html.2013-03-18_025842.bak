@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>google maps basic reference</title>
+	<style type="text/css">#map { width: 600px; height: 600px; border: 10px solid #000; border-radius: 9px; box-shadow: 10px 8px 5px #888888; float: left;} 
+	  #info { float: left; margin: 30px;}
+      .underline1 { text-decoration:underline; }
+    </style>
+	
+	<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?v=3&sensor=false"></script>
+
+	<script type="text/javascript">
+	
+	(function() {
+window.onload = function() {
+  var mapDiv = document.getElementById("map");
+  var centerlatlng = new google.maps.LatLng(40.562199,-105.15893);
+  var options = {
+    center: centerlatlng,
+    zoom: 14,
+    mapTypeId: google.maps.MapTypeId.TERRAIN
+  };
+  var map = new google.maps.Map( mapDiv, options);
+  
+  
+  var marker1 = new google.maps.Marker({
+    position: new google.maps.LatLng(40.558678,-105.158386),
+    map: map,
+    title:"with info window"
+});
+
+var contentString1 = '<h2>H2 inside an info window</h2>';
+
+var infowindow1 = new google.maps.InfoWindow({
+    content: contentString1
+});
+
+google.maps.event.addListener(marker1, 'click', function() {
+  infowindow1.open(map,marker1);
+});
+
+  var marker2 = new google.maps.Marker({
+    position: new google.maps.LatLng(40.5472,-105.154266),
+    map: map,
+    title:"second info window"
+});
+
+var contentString2 = '<h2>H2 inside the second info window</h2>';
+
+var infowindow2 = new google.maps.InfoWindow({
+    content: contentString2
+});
+
+google.maps.event.addListener(marker2, 'click', function() {
+  infowindow2.open(map,marker2);
+});
+
+  var marker3 = new google.maps.Marker({
+    position: new google.maps.LatLng(40.025511,-105.272369),
+    map: map,
+    title:"different style marker",
+	icon : "http://google.com/mapfiles/ms/micons/blue-pushpin.png "
+});
+
+  var marker4 = new google.maps.Marker({
+    position: new google.maps.LatLng(39.998854,-105.282884),
+    map: map,
+    title:"trail style marker",
+	icon : "http://google.com/mapfiles/ms/micons/hiker.png "
+});
+
+//putting linked icons in a variable in a js file that links to everypage would be an easy way to change a broken link
+  var mimage =  "webtest1.JPG";
+  
+   var marker5 = new google.maps.Marker({
+    position: new google.maps.LatLng(40.037275,-105.243616),
+    map: map,
+    title:"local image as marker",
+	icon : mimage
+}); 
+
+
+
+
+  document.getElementById("fortcollins").onclick = function() {
+    map.setOptions( {
+      center : new google.maps.LatLng( 40.618513,-105.055933 ),
+      zoom : 10,
+      mapTypeId : google.maps.MapTypeId.TERRAIN
+    });
+  }  //end onclick
+  
+    document.getElementById("boulder").onclick = function() {
+    map.setOptions( {
+      center : new google.maps.LatLng( 40.011313,-105.270167  ),
+      zoom : 13,
+      mapTypeId : google.maps.MapTypeId.SATELLITE
+    });
+  }  //end onclick
+  
+    document.getElementById("denver").onclick = function() {
+    map.setOptions( {
+      center : new google.maps.LatLng( 39.684468,-104.891138  ),
+      zoom : 8,
+      mapTypeId : google.maps.MapTypeId.ROADMAP
+    });
+  }  //end onclick
+
+  
+  
+}  //end onload
+})();  //end self executing code encapsulating function
+	
+	</script>
+	
+	
+	
+	
+	
+  </head>
+  
+  
+  <body>
+  
+  
+  
+    <div id="map"></div>
+  
+    <div id="info">
+		<label><input type="button" value="Fort Collins" id="fortcollins" />Change map settings</label><br>
+	    <label><input type="button" value="Boulder" id="boulder" /> it uses map.setOptions</label><br>
+	    <label><input type="button" value="Denver" id="denver" />and changes it on click</label><br>
+		
+     <br>
+	  <br>
+	  <br>
+	<p>
+	  <span class="underline1">On this page</span>:
+	  <ul>
+	  <li>changed map options on button click</li>
+	  <li>made multiple markers with info windows that stay open for each marker</li>
+	  <li>the way it was done create seperate markers, infowindows and click events seems<br>
+	  really inefficient and should probably done with arrays and self executing functions,<br>
+	  which i will try on a different page</li>
+	  </ul>
+    </p>
+	</div>
+  
+  </body>
+</html>

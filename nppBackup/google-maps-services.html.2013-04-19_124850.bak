@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>google maps services</title>
+	<link rel="stylesheet" type="text/css" href="menu111.css">
+	<style type="text/css">#map { width: 600px; height: 600px; border: 10px solid #000; border-radius: 9px; box-shadow: 10px 8px 5px #888888; float: left;} 
+	  #info { width: 450px; float: left; margin: 30px;}
+      .underline1 { text-decoration:underline; }
+    </style>
+	
+	<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?v=3&sensor=false"></script>
+	<script src="nav1.1.min.js"></script>
+	
+	
+	<script>
+		$(document).ready(function() {
+			$('#navigation').navPlugin( {
+			  'itemWidth' : 200,
+			  'itemHeight' : 30,
+			  'navEffect' : 'slide',
+			  'speed' : 250
+			});
+		}); // end ready
+    </script>
+	
+	
+	
+	
+
+	<script type="text/javascript">
+	
+	(function() {
+window.onload = function() {
+  var mapDiv = document.getElementById("map");
+  
+  var rendererOptions = {
+  draggable: true
+};
+  
+  var directionsDisplay;
+  var directionsService = new google.maps.DirectionsService();
+  directionsDisplay = new google.maps.DirectionsRenderer(rendererOptions);
+  
+  var centerlatlng = new google.maps.LatLng(40.572631,-105.117731);
+  var options = {
+    center: centerlatlng,
+    zoom: 9,
+    mapTypeId: google.maps.MapTypeId.ROADMAP
+  };
+  var map = new google.maps.Map( mapDiv, options);
+  
+  var destinationa1 = new google.maps.LatLng(40.432968,-105.768471);
+  var destinationB = new google.maps.LatLng(40.447208,-105.754395);
+
+  
+      var marker1b = new google.maps.Marker({
+    position: destinationa1,
+    map: map,
+    title:"RNMP"
+});
+
+      var marker1c = new google.maps.Marker({
+    position: destinationB,
+    map: map,
+    title:"RNMP"
+});
+
+  directionsDisplay.setMap(map);
+  directionsDisplay.setPanel(document.getElementById("directionsPanel"));
+  
+  
+
+  function calcRoute() {
+  var start = document.getElementById("start").value;
+  var end = destinationa1;
+  var request = {
+    origin:start,
+    destination:end,
+    travelMode: google.maps.TravelMode.DRIVING,
+	provideRouteAlternatives: true
+  };
+  directionsService.route(request, function(response, status) {
+    if (status == google.maps.DirectionsStatus.OK) {
+      directionsDisplay.setDirections(response);
+    }
+  });
+}
+  
+  
+    document.getElementById('direct1a').onclick = function() {
+      calcRoute();
+}
+
+//this is just so you can hit enter and get the directions without hitting the button. could also make that button a submit button and just have this block
+    document.getElementById('submit1').onsubmit = function() {
+      calcRoute();
+	  return false;
+}
+
+
+//below is the distance matrix
+
+
+
+var service = new google.maps.DistanceMatrixService();
+service.getDistanceMatrix(
+  {
+    origins: [destinationa1],
+    destinations: [destinationB],
+    travelMode: google.maps.TravelMode.WALKING,
+	unitSystem: google.maps.UnitSystem.IMPERIAL
+  }, callback);
+
+function callback(response, status) {
+  if (status == google.maps.DistanceMatrixStatus.OK) {
+    var origins = response.originAddresses;
+    var destinations = response.destinationAddresses;
+
+    for (var i = 0; i < origins.length; i++) {
+      var results = response.rows[i].elements;
+      for (var j = 0; j < results.length; j++) {
+        var element = results[j];
+        var distance = element.distance.text;
+        var duration = element.duration.text;
+        var from = origins[i];
+        var to = destinations[j];
+      }
+    }
+  }
+console.log(distance);
+console.log(duration);
+}
+  
+}  //end onload
+})();  //end self executing code encapsulating function
+	
+	</script>
+	
+	
+	
+	
+	
+  </head>
+  
+  
+  <body>
+  
+  <div id="navigation1">
+  <ul id="navigation">
+	<li><a href="#">Overlays</a>
+	  <ul>
+	    <li><a href="google-maps-markers-windows-options.html">Markers, Windows, Options</a></li>
+		<li><a href="google-maps-markers-array-method.html">Markers Array Method</a></li>
+		<li><a href="google-maps-polylines-polygons.html">Polylines and Polygons</a></li>
+	  </ul>
+	</li> 
+	<li><a href="#">Layers and Services</a>
+	  <ul>
+	    <li><a href="google-maps-street-view.html">Steetview</a></li>
+		<li><a href="google-maps-elevation-service.html">Elevation Service</a></li>
+		<li><a href="google-maps-services.html">Services</a></li>
+		<li><a href="google-maps-layers.html">Layers</a></li>
+		<li><a href="google-maps-panoramio-layer.html">Panoramio Layer</a></li>
+	  </ul>
+	</li>
+    <li><a href="#">Utilities</a>
+	  <ul>
+	    <li><a href="google-maps-info-utility-1.html">Info Utility</a></li>
+		<li><a href="google-maps-geocoding.html">Geocoding</a></li>
+	  </ul>
+	</li>  
+	<li><a href="#">Other</a>
+	  <ul>
+	    <li><a href="google-map-basic-template.html">Basic Template</a></li>
+		<li><a href="google-maps-styled-map.html">Styled Map</a></li>
+		<li><a href="google-charts.html">Charts</a></li>
+		<li><a href="google-maps-bounds-marker-on-click-with-draggable.html">Bounds, Marker on click</a></li>
+	  </ul>
+    </li>
+  </ul>
+  </div>
+  <p class="clearit"></p>
+
+
+  
+  
+    <div id="map"></div>
+	
+  
+    <div id="info">
+	     <p>This uses the directions service.  It renders directions on the map and in a div for the entered location to one of the markers.</p>
+		 <form id="submit1">  <!-- This is how you make a text field submit on enter, by wrapping it in the form element -->
+	     <label><input type="text" value="" id="start" />Enter starting location</label><br>
+		<label><input type="button" value="Get Directions" id="direct1a" /></label><br>
+		</form>
+		<p>
+		There is a console log that shows walking distance and time<br> between the two markers shown. It doesn't seem<br>
+		to be a good choice for hiking though, more for cities.
+		</p>
+
+	</div>
+  <div id="directionsPanel" style="float:right;width:600px;height 100%"></div>
+  </body>
+</html>

@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>google maps basic layers</title>
+	<style type="text/css">#map { width: 600px; height: 600px; border: 10px solid #000; border-radius: 9px; box-shadow: 10px 8px 5px #888888; float: left;} 
+	  #info { float: left; margin: 30px;}
+      .underline1 { text-decoration:underline; }
+    </style>
+	<script src="jquery-1.7.2.min.js"></script>
+	<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?v=3&sensor=false"></script>
+
+	<script type="text/javascript">
+	
+	(function() {
+window.onload = function() {
+  var mapDiv = document.getElementById("map");
+  var centerlatlng = new google.maps.LatLng(39.729898,-104.977455);
+  var options = {
+    center: centerlatlng,
+    zoom: 12,
+    mapTypeId: google.maps.MapTypeId.ROADMAP
+  };
+  var map = new google.maps.Map( mapDiv, options);
+
+  
+var trafficLayer = new google.maps.TrafficLayer();
+		
+			   $("#traffic1").toggle(function(){
+                 trafficLayer.setMap(map); },
+				 function() { trafficLayer.setMap(null); }
+        );
+		
+			   $("#transit1").toggle(function(){
+                                  }
+        );
+		
+			   $("#bicycle1").toggle(function(){
+         baker.setVisible(false);},
+         function(){
+         baker.setVisible(true);}
+        );
+		
+			   $("#weather1").toggle(function(){
+         baker.setVisible(false);},
+         function(){
+         baker.setVisible(true);}
+        );
+		
+
+		
+		
+		
+		
+  
+}  //end onload
+})();  //end self executing code encapsulating function
+	
+	</script>
+	
+	
+	
+	
+	
+  </head>
+  
+  
+  <body>
+  
+  
+  
+    <div id="map"></div>
+  
+    <div id="info">
+		<label><input type="button" value="Traffic Layer" id="traffic1" />put whatever functionality on it</label><br>
+		<label><input type="button" value="Transit Layer" id="transit1" />asasaasasasasaput whatever functionality on it</label><br>
+		<label><input type="button" value="Bicycle Layer" id="bicycle1" />put whatever functionality on it</label><br>
+		<label><input type="button" value="Weather Layer" id="weather1" />put whatever functionality on it</label><br>
+
+	</div>
+  
+  </body>
+</html>

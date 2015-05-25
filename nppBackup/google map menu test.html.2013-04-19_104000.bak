@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>google maps menu test</title>
+	<style type="text/css">
+	   #map { width: 600px; height: 600px; border: 10px solid #000; border-radius: 9px; box-shadow: 10px 8px 5px #888888; float: left;} 
+	   #info { float: left; margin: 30px;}
+       .underline1 { text-decoration:underline; }
+	   
+	   #navigation {
+	     position: relative;
+		 z-index: 9999999;
+	   }
+	  
+		#navigation ul, #navigation li {
+			margin: 0;
+			padding: 0;
+			list-style-type: none;
+		}
+
+		#navigation a {
+			background-color: rgb(204,204,204);
+			text-decoration: none;
+			font: 16px 'ColaborateLightRegular', Arial, sans-serif;
+			text-indent: 10px;
+			border-top: 1px solid #ccc;
+			border-left:1px solid #ccc;
+			border-right:1px solid #999;
+			border-bottom:1px solid #999;
+			margin: 0px;
+			padding: 0px;
+			color: rgb(53,75,118);
+		}
+
+		#navigation a:hover {
+			border-top:1px solid #999;
+			border-left:1px solid #999;
+			border-right:1px solid #ccc;
+			border-bottom:1px solid #ccc;
+			background-color: #555;
+			color: white;
+		}
+
+		#navigation .stack > a {
+			background-image: url(images/arrow.png);
+			background-repeat: no-repeat;
+			background-position: 97% 8px;
+		}
+		#navigation .stack > a:hover {
+			background-position: 97% -78px;	
+		}
+
+		#navigation ul .stack > a {
+			background-position: 97% -21px;
+		}
+
+		#navigation ul .stack > a:hover {
+			background-position: 97% -54px;
+		}
+		
+		.clearit { clear: both; height: 1px; }
+    </style>
+	
+	<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?v=3&sensor=false"></script>
+    <script src="jquery-1.7.2.min.js"></script>
+    <script src="nav1.1.min.js"></script>
+	
+	
+	<script>
+		$(document).ready(function() {
+			$('#navigation').navPlugin( {
+			  'itemWidth' : 200,
+			  'itemHeight' : 30,
+			  'navEffect' : 'slide',
+			  'speed' : 250
+			});
+		}); // end ready
+    </script>
+	
+	<script type="text/javascript">
+	
+	(function() {
+window.onload = function() {
+  var mapDiv = document.getElementById("map");
+  var centerlatlng = new google.maps.LatLng(40.562199,-105.15893);
+  var options = {
+    center: centerlatlng,
+    zoom: 14,
+    mapTypeId: google.maps.MapTypeId.TERRAIN
+  };
+  var map = new google.maps.Map( mapDiv, options);
+
+  
+  
+  
+}  //end onload
+})();  //end self executing code encapsulating function
+	
+	</script>
+	
+	
+	
+	
+	
+  </head>
+  
+  
+  <body>
+  <div id="navigation1">
+  <ul id="navigation">
+	<li><a href="#">Overlays</a>
+	  <ul>
+	    <li><a href="#">Markers, Windows, Options</a></li>
+		<li><a href="#">Markers Array Method</a></li>
+		<li><a href="#">Polylines and Polygons</a></li>
+	  </ul>
+	</li> 
+	<li><a href="#">Layers and Services</a>
+	  <ul>
+	    <li><a href="#">Steetview</a></li>
+		<li><a href="#">Elevation Service</a></li>
+		<li><a href="#">Services</a></li>
+		<li><a href="#">Layers</a></li>
+		<li><a href="#">Panoramio Layer</a></li>
+	  </ul>
+	</li>
+    <li><a href="#">Utilities</a>
+	  <ul>
+	    <li><a href="#">Info Utility</a></li>
+		<li><a href="#">Geocoding</a></li>
+	  </ul>
+	</li>  
+	<li><a href="#">Other</a>
+	  <ul>
+	    <li><a href="#">Basic Template</a></li>
+		<li><a href="#">Styled Map</a></li>
+		<li><a href="#">Charts</a></li>
+		<li><a href="#">Bounds, Marker on click</a></li>
+	  </ul>
+    </li>
+  </ul>
+  </div>
+  <p class="clearit"></p>
+  
+  
+    <div id="map"></div>
+  
+    <div id="info">
+		<label><input type="button" value="a button to use" id="fortcollins" />put whatever functionality on it</label><br>
+
+	</div>
+  
+  </body>
+</html>

@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>google maps menu test</title>
+	<style type="text/css">
+	   #map { width: 600px; height: 600px; border: 10px solid #000; border-radius: 9px; box-shadow: 10px 8px 5px #888888; float: left;} 
+	   #info { float: left; margin: 30px;}
+       .underline1 { text-decoration:underline; }
+	  
+		#navigation ul, #navigation li {
+			margin: 0;
+			padding: 0;
+			list-style-type: none;
+		}
+
+		#navigation a {
+			background-color: rgb(204,204,204);
+			text-decoration: none;
+			font: 16px 'ColaborateLightRegular', Arial, sans-serif;
+			text-indent: 10px;
+			border-top: 1px solid #ccc;
+			border-left:1px solid #ccc;
+			border-right:1px solid #999;
+			border-bottom:1px solid #999;
+			margin: 0px;
+			padding: 0px;
+			color: rgb(53,75,118);
+		}
+
+		#navigation a:hover {
+			border-top:1px solid #999;
+			border-left:1px solid #999;
+			border-right:1px solid #ccc;
+			border-bottom:1px solid #ccc;
+			background-color: #555;
+			color: white;
+		}
+
+		#navigation .stack > a {
+			background-image: url(images/arrow.png);
+			background-repeat: no-repeat;
+			background-position: 97% 8px;
+		}
+		#navigation .stack > a:hover {
+			background-position: 97% -78px;	
+		}
+
+		#navigation ul .stack > a {
+			background-position: 97% -21px;
+		}
+
+		#navigation ul .stack > a:hover {
+			background-position: 97% -54px;
+		}
+		
+		.clearit { clear: both; }
+    </style>
+	
+	<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?v=3&sensor=false"></script>
+    <script src="jquery-1.7.2.min.js"></script>
+    <script src="nav1.1.min.js"></script>
+	<script type="text/javascript">
+	
+	<script>
+		$(document).ready(function() {
+			$('#navigation').navPlugin( {
+			  'itemWidth' : 150,
+			  'itemHeight' : 30,
+			  'navEffect' : 'slide',
+			  'speed' : 250
+			});
+		}); // end ready
+</script>
+	
+	(function() {
+window.onload = function() {
+  var mapDiv = document.getElementById("map");
+  var centerlatlng = new google.maps.LatLng(40.562199,-105.15893);
+  var options = {
+    center: centerlatlng,
+    zoom: 14,
+    mapTypeId: google.maps.MapTypeId.TERRAIN
+  };
+  var map = new google.maps.Map( mapDiv, options);
+
+  
+  
+  
+}  //end onload
+})();  //end self executing code encapsulating function
+	
+	</script>
+	
+	
+	
+	
+	
+  </head>
+  
+  
+  <body>
+  
+  <ul id="navigation">
+	<li><a href="#">Overlays</a></li>
+	  <ul>
+	    <li>Markers, Windows, Options</li>
+		<li>Markers Array Method</li>
+		<li>Polylines and Polygons</li>
+	  </ul>
+	<li><a href="#">Layers and Services</a></li>
+	  <ul>
+	    <li>Steetview</li>
+		<li>Elevation Service</li>
+		<li>Services</li>
+		<li>Layers</li>
+		<li>Panoramio Layer</li>
+	  </ul>
+    <li><a href="#">Utilities</a></li>
+	  <ul>
+	    <li>Info Utility</li>
+		<li>Geocoding</li>
+	  </ul>
+	<li><a href="#">Other</a></li>
+	  <ul>
+	    <li>Basic Template</li>
+		<li>Styled Map</li>
+		<li>Charts</li>
+		<li>Bounds, Marker on click</li>
+	  </ul>
+  
+  </ul>
+  <p class="clearit"></p>
+  
+  
+    <div id="map"></div>
+  
+    <div id="info">
+		<label><input type="button" value="a button to use" id="fortcollins" />put whatever functionality on it</label><br>
+
+	</div>
+  
+  </body>
+</html>

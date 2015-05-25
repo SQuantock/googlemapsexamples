@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>google maps street view</title>
+	<link rel="stylesheet" type="text/css" href="menu111.css">
+	<style type="text/css">#map { width: 600px; height: 600px; border: 10px solid #000; border-radius: 9px; box-shadow: 10px 8px 5px #888888; float: left;} 
+	  #stview { width: 400px; height: 400px; float: left; margin: 30px;}
+	   #info { float: left; margin: 30px;}
+	  #fourtyfive { clear: both; }
+	  
+      .underline1 { text-decoration:underline; }
+    </style>
+	
+	<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?v=3&sensor=false"></script>
+	<script src="jquery-1.7.2.min.js"></script>
+	<script src="nav1.1.min.js"></script>
+	
+	
+	<script>
+		$(document).ready(function() {
+			$('#navigation').navPlugin( {
+			  'itemWidth' : 200,
+			  'itemHeight' : 30,
+			  'navEffect' : 'slide',
+			  'speed' : 250
+			});
+		}); // end ready
+    </script>	
+	
+	
+	
+
+	<script type="text/javascript">
+	
+	(function() {
+window.onload = function() {
+
+  var mapDiv = document.getElementById("map");
+  var infowindow = new google.maps.InfoWindow();
+  var centerlatlng = new google.maps.LatLng(40.573805,-105.084486);
+  var options = {
+    center: centerlatlng,
+    zoom: 14,
+    mapTypeId: google.maps.MapTypeId.HYBRID,
+	mapTypeControl: true,
+	mapTypeControlOptions: { //this shows all basic maptypes, this is also where you set the position
+	  position: google.maps.ControlPosition.TOP,
+	  style: google.maps.MapTypeControlStyle.DROPDOWN_MENU,
+/* 	  mapTypeIds: [                        //this seems no longer necesary as the show up by default using labels and terrain checkbox
+        google.maps.MapTypeId.ROADMAP,
+        google.maps.MapTypeId.HYBRID,
+        google.maps.MapTypeId.TERRAIN,
+	    google.maps.MapTypeId.SATELLITE
+	  ]   */
+	}
+  };
+  var map = new google.maps.Map( mapDiv, options);
+  
+  
+  
+  
+    var panoramaOptions = {
+  position: new google.maps.LatLng(40.578191,-105.095765),
+  pov: {
+    heading: 162,
+    pitch: -5,
+	//zoom: 3   //this works, it does this for EVERY streetview though, you can set it for each click though, it reverts to this setting though, no mention you can set it here in the docs though
+  },
+  addressControl: false,    //these all disable controls, there are more options
+  linksControl: false,
+  clickToGo: false
+};
+
+var panorama = new  google.maps.StreetViewPanorama(document.getElementById("stview"), panoramaOptions );
+map.setStreetView(panorama);
+//panorama.setZoom(3);   this is another way to set zoom
+  
+  
+  
+  //this is if just creating each marker seperately
+  var markera1 = new google.maps.Marker({
+    position: new google.maps.LatLng(40.572582,-105.090966),
+    map: map,
+    title:"Animation"
+}); 
+
+function animateInCircle() {
+    var count = 0;
+    offsetId = window.setInterval(function() {
+      count = (count + 10);
+	  panorama.setPov( { heading: count, pitch: 19 } );
+	  if ( count == 360) { window.clearInterval(offsetId); }
+  }, 250);  //settings count-20 interval-250, count-10 interval-125, count-10 seems smoothest and count is the pan each time
+  }
+
+  
+  var driveholder = [
+new google.maps.LatLng(40.567273,-105.076838),
+new google.maps.LatLng(40.567345,-105.076832),
+new google.maps.LatLng(40.567395,-105.076827),
+new google.maps.LatLng(40.567432,-105.076824),
+new google.maps.LatLng(40.567559,-105.076823),
+new google.maps.LatLng(40.567648,-105.076822),
+new google.maps.LatLng(40.567726,-105.076826),
+new google.maps.LatLng(40.567891,-105.076824),
+new google.maps.LatLng(40.56802,-105.076827),
+new google.maps.LatLng(40.5683,-105.076827)
+  ];
+  
+  
+  //an experiment, doesn't seem to work that great
+  function animateDrive() {
+    var count = 0;
+	panorama.setPosition( new google.maps.LatLng(40.567209,-105.076842) );
+	panorama.setPov( { heading: 0, pitch: -2 } );
+    offsetId = window.setInterval(function() {
+      count = (count + 1);
+	  panorama.setPosition( driveholder[count] );
+	  if ( count == 7 ) { window.clearInterval(offsetId); }
+  }, 4000);  //settings count-20 interval-250, count-10 interval-125, count-10 seems smoothest and count is the pan each time
+  }
+  
+  
+		    google.maps.event.addListener( markera1, 'click', function() {
+    infowindow.setContent("aaaaaa");
+    infowindow.open(map, markera1);
+	panorama.setPosition( new google.maps.LatLng(40.572582,-105.090966) );
+  });
+
+
+
+//------------------------multiple markers
+
+var i, marker;
+
+var laurel = new google.maps.LatLng(40.578107,-105.077319);
+var oval = new google.maps.LatLng(40.57594,-105.07998);
+var elizabeth = new google.maps.LatLng(40.57462,-105.09603);
+
+//either setting LatLng in variable or reusing it works, variable probably more efficient
+  var places = [
+    [ "Laurel", laurel, "This is Laurel and College", { heading: 70, pitch: 10, zoom: 1} ],
+    [ "Oval", oval, "This is the oval", { heading: 235, pitch: 9} ],
+    [ "Elizabeth",  new google.maps.LatLng(40.57462,-105.09603) , "This is Elizabeth and Shields", { heading: 279, pitch: 4, zoom: 1} ]
+  ];
+  
+  //there is closure stuff happening in the event listener part, it has to do with accessing variables values
+    for ( var i = 0; i < places.length; i++ ) {
+
+      var marker = new google.maps.Marker( {
+        position : places[i][1],
+        map : map,
+        title : places[i][0]
+      });
+	
+	  (function( i, marker ) {  //start self executing function
+        google.maps.event.addListener( marker, "click", function() {
+          infowindow.setContent( places[i][2] );
+          infowindow.open(map, marker);
+		  panorama.setPosition( places[i][1] );
+		  panorama.setPov( places[i][3] );
+        });  //end add listener
+      })( i, marker );  //end self executing function
+	}  //end for loop
+	
+	
+
+
+	function animateFourtyFive() {
+	  if (map.getTilt() != 0) {
+		
+	    map.setHeading(90);
+	    var count = 90;
+
+		
+    offsetId = window.setInterval(function() {
+      count = (count + 90);
+	  map.setHeading(count);
+	    if ( count == 360) { window.clearInterval(offsetId); }
+  }, 1000);
+	  }  //end if tilt
+	}  //end function
+	
+	
+	//this almost works better, just doesn't go in a circle
+/* function animateFourtyFive() {
+map.setHeading(180);
+}
+	 */
+  
+  
+  
+    document.getElementById("pov1").onclick = function() {
+               console.log(panorama.getPov());
+			   console.log(panorama.getPosition());
+  }  //end onclick
+  
+      document.getElementById("oldtown1").onclick = function() {
+	    map.setOptions( {
+          center : new google.maps.LatLng(40.587623,-105.076168 ),
+          zoom : 19,
+		  mapTypeId : google.maps.MapTypeId.HYBRID
+        });
+  }  //end onclick
+  
+      document.getElementById("animation1").onclick = function() {
+	    animateInCircle();
+		//animateDrive();
+  }  //end onclick
+  
+       document.getElementById("animation2").onclick = function() {
+		animateFourtyFive();
+  }  //end onclick
+  
+  
+  
+  
+}  //end onload
+})();  //end self executing code encapsulating function
+	
+	</script>
+	
+	
+	
+	
+	
+  </head>
+  
+  
+  <body>
+  
+  <div id="navigation1">
+  <ul id="navigation">
+	<li><a href="#">Overlays</a>
+	  <ul>
+	    <li><a href="google-maps-markers-windows-options.html">Markers, Windows, Options</a></li>
+		<li><a href="google-maps-markers-array-method.html">Markers Array Method</a></li>
+		<li><a href="google-maps-polylines-polygons.html">Polylines and Polygons</a></li>
+	  </ul>
+	</li> 
+	<li><a href="#">Layers and Services</a>
+	  <ul>
+	    <li><a href="google-maps-street-view.html">Steetview</a></li>
+		<li><a href="google-maps-elevation-service.html">Elevation Service</a></li>
+		<li><a href="google-maps-services.html">Services</a></li>
+		<li><a href="google-maps-layers.html">Layers</a></li>
+		<li><a href="google-maps-panoramio-layer.html">Panoramio Layer</a></li>
+	  </ul>
+	</li>
+    <li><a href="#">Utilities</a>
+	  <ul>
+	    <li><a href="google-maps-info-utility-1.html">Info Utility</a></li>
+		<li><a href="google-maps-geocoding.html">Geocoding</a></li>
+	  </ul>
+	</li>  
+	<li><a href="#">Other</a>
+	  <ul>
+	    <li><a href="google-map-basic-template.html">Basic Template</a></li>
+		<li><a href="google-maps-styled-map.html">Styled Map</a></li>
+		<li><a href="google-charts.html">Charts</a></li>
+		<li><a href="google-maps-bounds-marker-on-click-with-draggable.html">Bounds, Marker on click</a></li>
+	  </ul>
+    </li>
+  </ul>
+  </div>
+  <h2 class="clearit">Google Maps Streetview</h2>
+
+
+
+  
+  
+  
+  <h3>This page mostly has to do with streetview but is also shows 45 degree imagery.</h3>
+
+  <div id="map"></div>
+  <div id="info">
+	  <p id="r1">
+			<label><input type="button" value="get pov settings" id="pov1" />get heading and pitch in console</label><br>
+			<label><input type="button" value="Animate Streetview" id="animation1" />animate in a circle</label><br> 
+	  </p>
+     <div id="stview"></div>
+  </div>
+    <div id="fourtyfive"><br>
+    <p>
+        45 degree imagery is only available in certain cities and while using hybrid or satellite maptypes<br>
+		and at higher zoom levels starting around 18 zoom<br><br>
+		<label><input type="button" value="Old Town" id="oldtown1" />zoom to old town to check out 45 degree imagery</label><br> 
+	    <label><input type="button" value="Animate 45" id="animation2" />animate 45 degree imagery in a circle, this works but not smoothly</label><br>  		 		
+    </p>
+  </div>
+  
+  </body>
+</html>

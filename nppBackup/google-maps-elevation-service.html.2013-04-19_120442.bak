@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>google maps elevation service</title>
+	<style type="text/css">#map { width: 600px; height: 400px; border: 10px solid #000; border-radius: 9px; box-shadow: 10px 8px 5px #888888; float: left;} 
+	  #info { width: 450px; float: left; margin: 30px;}
+      .underline1 { text-decoration:underline; }
+	  #chartp { width: 600px; margin: 250px 0px 0px 0px; clear: both; }
+	  #elevation_chart { width: 600px; height: 200px; }
+    </style>
+	<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+	<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?v=3&sensor=false"></script>
+
+	<script type="text/javascript">
+	google.load("visualization", "1", {packages: ["columnchart"]});
+    var chart;
+	
+	//I think there are just too many data points on the chart to display info such as labels and annotations properly
+	
+	(function() {
+window.onload = function() {
+  var mapDiv = document.getElementById("map");
+  var infowindow = new google.maps.InfoWindow();
+  var polyline;
+  var centerlatlng = new google.maps.LatLng(40.545504,-105.082026);
+  var options = {
+    center: centerlatlng,
+    zoom: 9,
+    mapTypeId: google.maps.MapTypeId.TERRAIN
+  };
+  var map = new google.maps.Map( mapDiv, options);
+  
+  var east1 = new google.maps.LatLng(40.582671,-104.732666);
+  var west1 = new google.maps.LatLng(40.582671,-105.831299);
+  
+  drawPath();
+
+  //a lot of this is copied from https://developers.google.com/maps/documentation/javascript/elevation
+  function drawPath() {
+	  var elevationrequest1 = new google.maps.ElevationService();
+	  
+	  chart = new google.visualization.ColumnChart(document.getElementById('elevation_chart'));
+	  var path = [ west1, east1 ];
+	  
+		var pathRequest = {
+		'path': path,
+		'samples': 256
+	  }
+	  
+		elevationrequest1.getElevationAlongPath(pathRequest, plotElevation);
+  }  //end drawpath
+  
+	    var elevationPath = [];
+function plotElevation(results, status) {
+  if (status == google.maps.ElevationStatus.OK) {
+    elevations = results;
+
+	//if you really needed to be able to click on polyline and show what was clicked on chart, i think creating a seperate polyline for
+	//every section in this loop would be the way to go, otherwise there is serious math and other difficulties. there is no easy way to
+	//grab it in the api. would also include the create polyline stuff just below the loop in the loop
+    for (var i = 0; i < results.length; i++) {
+      elevationPath.push(elevations[i].location);
+    }
+
+	    var pathOptions = {
+      path: elevationPath,
+      strokeColor: '#0000CC',
+      opacity: 0.4,
+      map: map
+    }
+
+	polyline = new google.maps.Polyline(pathOptions);
+	
+
+	    var data = new google.visualization.DataTable();
+    data.addColumn('string', 'Sample');
+    data.addColumn('number', 'Elevation');
+
+    for (var i = 0; i < results.length; i++) {
+	//this if is simply to give enough range for a single point, such as a town to display as a label, might not be accurate enough for some situations, there are just too many data points
+	  if ( i > 163 && i < 174 ) { data.addRow(['Fort Collins', elevations[i].elevation * 3.28084]); } else {
+      data.addRow(['', elevations[i].elevation * 3.28084]);
+	  } //end else
+    }
+	
+	  var marker1a = new google.maps.Marker();
+	  var infowindow1a = new google.maps.InfoWindow();
+	
+	google.visualization.events.addListener(chart, 'select', function () {
+	          var selectedItem = chart.getSelection()[0];
+          if (selectedItem) {
+            var location1 = data.getValue(selectedItem.row, 1);
+			console.log(selectedItem.row);
+			location1 = Math.round(location1);
+			location1 = location1.toString();
+		
+//use this if you want multiple markers to stay	on the map	
+/*   var marker1a = new google.maps.Marker({
+    position: elevationPath[selectedItem.row],
+    map: map,
+    title:"with info window"
+}); */
+console.log(location1);
+console.log(chart.getSelection());
+console.log(chart.getSelection()[0].row);
+
+          marker1a.setOptions({ map: map, position: elevationPath[selectedItem.row] });
+          infowindow1a.setContent( 'Elevation = ' + location1 + ' ft.');
+          infowindow1a.open(map, marker1a);
+}
+	});
+
+	
+/* 	document.getElementById('elevation_chart').style.display = 'block';
+    chart.draw(data, {
+      width: 640,
+      height: 200,
+      legend: 'none',
+      titleY: 'Elevation (m)'
+    }); */
+
+	document.getElementById('elevation_chart').style.display = 'block';
+    chart.draw(data, {
+      width: 600,
+      height: 200,
+      legend: 'none',
+      titleY: 'Elevation (ft)',
+	  titleX: 'lat and lng'
+
+    });
+  }  //end if
+  
+  
+  
+  
+  //this makes it so if you have a known location you can click the marker to show the infobubble on the chart, this is limited to the points of the 
+  // the elevation request but it seems you could get it fairly accurate
+      var marker1b = new google.maps.Marker({
+    position: new google.maps.LatLng(40.583490,-105.615885),
+    map: map,
+    title:"styled info window"
+});
+
+    google.maps.event.addListener( marker1b, 'click', function() {
+	  chart.setSelection([{row:50,column:1}]);
+	  infowindow1a.setContent( 'Elevation = 9521 ft.' + '<br>' + 'This indicates the elevation on the chart with a bubble' + '<br>' + 'You are restricted to points in the elevation request');
+      infowindow1a.open(map, marker1b);
+      //google.visualization.events.trigger(chart.getSelection()[0].row, 'select', null);
+    });
+  
+  
+}  //end plot Elevation
+
+
+
+  
+  
+}  //end onload
+})();  //end self executing code encapsulating function
+	
+	</script>
+	
+	
+	
+	
+	
+  </head>
+  
+  
+  <body>
+  
+  
+  
+    <div id="map"></div>
+  
+    <div id="info">
+		<label><input type="button" value="a button to use" id="fortcollins" />put whatever functionality on it</label><br>
+		<p>This uses the Google Maps API and the Google Visualization API. You can both 1. click the chart and a marker appears at the corresponding location and 2. click
+		a marker representing a known location from the elevation request and the infobubble will open on the chart<br>
+		Just using the click on the chart functionality would probably be best in most situations</p>
+	    <p>It is very difficult to click the line and have the chart react and not worth the time. There is no real api support for getting the nearest point. It would
+		also be inaccurate because the elevation points could be far away in ft. from the click.</p>
+	</div>
+	
+	<div id="chartp"><br>Click chart to see marker at corresponding lat and lng</div>
+	<div id="elevation_chart"></div>
+  
+  </body>
+</html>

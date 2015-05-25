@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>panoramio layer</title>
+	<style type="text/css">#map { width: 600px; height: 600px; border: 10px solid #000; border-radius: 9px; box-shadow: 10px 8px 5px #888888; float: left;} 
+	  #container1 { float: left; margin: 30px; width: 500px;  border: 3px solid #000; border-radius: 9px; text-align: center; }
+	  #container2 { margin: 10px; width: 431px; height: 435px; border: 3px solid #000; border-radius: 9px; display: inline-block; }
+	  #panoholder { margin: 0px; width: 425px; height: 400px; border: 3px solid #000; border-radius: 5px; display: inline-block; }
+	  #descriptor { margin: 5px; width: 425px; height: 35px; }
+      .underline1 { text-decoration:underline; }
+    </style>
+	
+	<script src="jquery-1.7.2.min.js"></script>
+	<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?v=3&libraries=panoramio&sensor=false"></script>
+    <script type="text/javascript" src="http://www.panoramio.com/wapi/wapi.js?v=1"></script>
+	
+	<script type="text/javascript">
+	
+	(function() {
+window.onload = function() {
+  var mapDiv = document.getElementById("map");
+  var panoDiv = document.getElementById("panoholder");
+  var centerlatlng = new google.maps.LatLng(40.761821,-105.591488 );
+  var options = {
+    center: centerlatlng,
+    zoom: 13,
+    mapTypeId: google.maps.MapTypeId.TERRAIN
+  };
+  var map = new google.maps.Map( mapDiv, options);
+  
+  
+  //----------------using the google maps panoramio layer
+
+  //var panoramioLayer = new google.maps.panoramio.PanoramioLayer({ map: map, suppressInfoWindows: true });  //alternate way if setting multiple options
+  var panoramioLayer = new google.maps.panoramio.PanoramioLayer();
+  panoramioLayer.setMap(map);
+  //panoramioLayer.setOptions( { suppressInfoWindows: true } );  //if using default html outside of map
+  
+  //if using default html outside of map
+/*   google.maps.event.addListener(panoramioLayer, 'click', function(event) {
+    panoDiv.innerHTML = event.infoWindowHtml;
+  }); */
+  
+  //-----------------------------
+  
+  
+  //----------------using the panoramio api
+  
+
+
+var myRequest = new panoramio.PhotoRequest({
+  'rect': {'sw': {'lat': 40.761171, 'lng': -105.616894}, 'ne': {'lat':40.799517, 'lng': -105.539989}}
+});
+
+  var myPanoOptions = {
+  'width': 425,
+  'height': 400
+};
+
+var widget = new panoramio.PhotoWidget('panoholder', myRequest, myPanoOptions);
+widget.setPosition(0);
+
+var myOptionsList = {
+  'width': 500,
+  'height': 100,
+  'columns': 5,
+  'croppedPhotos': true,
+  'disableDefaultEvents': [panoramio.events.EventType.PHOTO_CLICKED]
+};
+
+var widget1 = new panoramio.PhotoListWidget('panoholderlist', myRequest, myOptionsList);
+widget1.setPosition(0);
+
+ 
+ //---this links the thumbnails with the bigger picture, mostly copied and pasted from api site, don't totally understand 
+//how they correlate the specific picture, but it works
+var description = document.getElementById("descriptor");
+
+  function onListPhotoClicked(event) {
+    var position = event.getPosition();
+	console.log(position);
+    if (position !== null) widget.setPosition(position);
+	
+	var photoa = event.getPhoto();  //this i added to display title underneath
+	description.innerHTML = photoa.getPhotoTitle();  //this i added to display title underneath, can also add photographer name etc
+  }
+  panoramio.events.listen(
+    widget1, panoramio.events.EventType.PHOTO_CLICKED,
+    function(e) { onListPhotoClicked(e); });
+	
+	  panoramio.events.listen(
+        widget, panoramio.events.EventType.PHOTO_CHANGED,
+        function(e) { description.innerHTML = widget.getPhoto().getPhotoTitle(); 
+		
+		    var llholder = widget.getPhoto().getPosition().lat + ',' + widget.getPhoto().getPosition().lng ;
+			
+			console.log(widget.getPhoto().getPosition());
+			console.log(llholder);
+		
+		    var marker1a = new google.maps.Marker({
+				position: new google.maps.LatLng(llholder),
+				map: map,
+				title: widget.getPhoto().getPhotoTitle()
+			});
+		
+		
+	  });
+	  
+	  
+	
+  //widget.enablePreviousArrow(false);
+  //widget.enableNextArrow(false);
+
+  widget.setPosition(0);
+  widget1.setPosition(0);
+
+//---
+
+
+
+
+
+
+
+//---------------------------------------
+
+	   $("#layertoggle").toggle(function(){
+         panoramioLayer.setMap(null);},
+         function(){
+         panoramioLayer.setMap(map);}
+        );
+	   
+
+  
+}  //end onload
+})();  //end self executing code encapsulating function
+	
+	</script>
+	
+	
+	
+	
+	
+  </head>
+  
+  
+  <body>
+  
+    <div id="info">
+	     <h2>This uses the google maps panoramio layer</h2>
+		<label><input type="button" value="Panoramio Layer" id="layertoggle" />toggle layer on and off</label><br>
+	</div>  
+  
+    <div id="map"></div>
+	<div id="container1"><h2>This uses the Panoramio API</h2>
+	  <div id="container2">
+      <div id="panoholder"></div>
+	  <p id="descriptor"></p>
+	  </div>
+	  <div id="panoholderlist"></div>
+    </div>
+  
+  </body>
+</html>

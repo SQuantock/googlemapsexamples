@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>google maps styled map</title>
+	<link rel="stylesheet" type="text/css" href="menu111.css">
+	<style type="text/css">#map { width: 600px; height: 600px; border: 10px solid #000; border-radius: 9px; box-shadow: 10px 8px 5px #888888; float: left;} 
+	  #info { float: left; margin: 30px; width: 500px;}
+      .underline1 { text-decoration:underline; }
+    </style>
+	
+	<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?v=3&sensor=false"></script>
+	<script src="jquery-1.7.2.min.js"></script>
+	<script src="nav1.1.min.js"></script>
+	
+	
+	<script>
+		$(document).ready(function() {
+			$('#navigation').navPlugin( {
+			  'itemWidth' : 200,
+			  'itemHeight' : 30,
+			  'navEffect' : 'slide',
+			  'speed' : 250
+			});
+		}); // end ready
+    </script>	
+	
+	
+	
+
+	<script type="text/javascript">
+	
+	(function() {
+window.onload = function() {
+  var mapDiv = document.getElementById("map");
+  var centerlatlng = new google.maps.LatLng(39.736762,-105.006924);
+  
+  
+  //these arrays are used to style the map, there is a styled map wizard that makes this easy, you style then copy and paste
+  //you reference these in the styles part of map options
+  var styles =   [ { "featureType": "road", "elementType": "geometry", "stylers": [ { "color": "#e08b1b" } ] },{ "featureType": "landscape.man_made", "elementType": "geometry", "stylers": [ { "color": "#0246d9" } ] },{ "featureType": "transit", "elementType": "geometry", "stylers": [ { "color": "#ff3014" } ] },{ "featureType": "poi", "elementType": "geometry.fill", "stylers": [ { "color": "#e8a40f" } ] },{ "featureType": "poi.park", "stylers": [ { "color": "#04b023" } ] },{ } ];
+  
+  var styles1 = [ { "stylers": [ { "invert_lightness": true }, { "gamma": 0.9 } ] },{ "featureType": "road", "elementType": "geometry.fill", "stylers": [ { "lightness": 20 } ] },{ "featureType": "road.arterial", "elementType": "labels", "stylers": [ { "lightness": -12 }, { "gamma": 0.8 }, { "saturation": -100 } ] } ];
+  
+    var styledMap = new google.maps.StyledMapType(styles1, {name: "Night"});
+	
+
+  
+  
+  var options = {
+    center: centerlatlng,
+    zoom: 14,
+    mapTypeId: google.maps.MapTypeId.ROADMAP,
+	styles: styles,
+	mapTypeControlOptions: {
+      mapTypeIds: [google.maps.MapTypeId.ROADMAP, google.maps.MapTypeId.SATELLITE, 'map_style']
+    }
+  };
+  var map = new google.maps.Map( mapDiv, options);
+
+    map.mapTypes.set('map_style', styledMap);  //it seems like you could set this in map options but this works
+
+  
+  
+}  //end onload
+})();  //end self executing code encapsulating function
+	
+	</script>
+	
+	
+	
+	
+	
+  </head>
+  
+  
+  <body>
+  
+  <div id="navigation1">
+  <ul id="navigation">
+	<li><a href="#">Overlays</a>
+	  <ul>
+	    <li><a href="google-maps-markers-windows-options.html">Markers, Windows, Options</a></li>
+		<li><a href="google-maps-markers-array-method.html">Markers Array Method</a></li>
+		<li><a href="google-maps-polylines-polygons.html">Polylines and Polygons</a></li>
+	  </ul>
+	</li> 
+	<li><a href="#">Layers and Services</a>
+	  <ul>
+	    <li><a href="google-maps-street-view.html">Steetview</a></li>
+		<li><a href="google-maps-elevation-service.html">Elevation Service</a></li>
+		<li><a href="google-maps-services.html">Services</a></li>
+		<li><a href="google-maps-layers.html">Layers</a></li>
+		<li><a href="google-maps-panoramio-layer.html">Panoramio Layer</a></li>
+	  </ul>
+	</li>
+    <li><a href="#">Utilities</a>
+	  <ul>
+	    <li><a href="google-maps-info-utility-1.html">Info Utility</a></li>
+		<li><a href="google-maps-geocoding.html">Geocoding</a></li>
+	  </ul>
+	</li>  
+	<li><a href="#">Other</a>
+	  <ul>
+	    <li><a href="google-map-basic-template.html">Basic Template</a></li>
+		<li><a href="google-maps-styled-map.html">Styled Map</a></li>
+		<li><a href="google-charts.html">Charts</a></li>
+		<li><a href="google-maps-bounds-marker-on-click-with-draggable.html">Bounds, Marker on click</a></li>
+	  </ul>
+    </li>
+  </ul>
+  </div>
+  <h2 class="clearit">Google Maps Styled Map</h2>
+
+
+
+  
+  
+    <div id="map"></div>
+  
+    <div id="info">
+		<p>
+		  Two things are are happening here. the style was changed for the default map options so you see the orange and blue map right away.
+		  There is also a new mapType, called "Night" here, which is added to the available map types and changes the style when chosen. Satellite and 
+		  terrain are unaffected by any of this.
+		</p>
+
+	</div>
+  
+  </body>
+</html>

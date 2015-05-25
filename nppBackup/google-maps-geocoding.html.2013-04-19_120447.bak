@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>google maps geocoding</title>
+	<style type="text/css">#map { width: 600px; height: 600px; border: 10px solid #000; border-radius: 9px; box-shadow: 10px 8px 5px #888888; float: left;} 
+	  #info { float: left; margin: 30px;}
+      .underline1 { text-decoration:underline; }
+	  #geoco1 { width: 300px }
+    </style>
+	
+	<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?v=3&sensor=false"></script>
+    <script src="keydragzoom_packed.js" type="text/javascript"></script>
+	<script type="text/javascript">
+	
+	(function() {
+window.onload = function() {
+  var d1 = document.getElementById( "latlngholder" );
+  var d2 = document.getElementById( "zoomcenterholder" );
+  var d3 = document.getElementById( "geocodeholder" );
+  var latandlng;
+  var mapDiv = document.getElementById("map");
+  var centerlatlng = new google.maps.LatLng(40.562199,-105.15893);
+  var geocoder, marker, infowindow;
+  var options = {
+    center: centerlatlng,
+    zoom: 9,
+    mapTypeId: google.maps.MapTypeId.TERRAIN,
+	scaleControl: true,
+	overviewMapControl: true,
+	overviewMapControlOptions: { opened: true},
+	draggableCursor: 'crosshair'
+  };
+  var map = new google.maps.Map( mapDiv, options);
+  
+  map.enableKeyDragZoom();
+
+  
+  document.getElementById('getValues').onclick = function() {
+  	    var latandlng1 = map.getCenter() ;
+         d2.innerHTML = 'Current Zoom Level = ' + map.getZoom() + '<br>' + 'Current Center = ' + latandlng1.toUrlValue() ;
+         //alert('Current Zoom level = ' + map.getZoom() + '\n' + 'Current Center = ' + map.getCenter() );
+}
+
+      google.maps.event.addListener(map, 'click', function(event) {
+	    latandlng = event.latLng;
+        d1.innerHTML = 'Lat and Lng = ' + latandlng.toUrlValue() ;
+      });
+
+	  //------------------------------------------geocoder stuff
+	  
+	  
+  document.getElementById('geoco2').onclick = function() {
+    var geo1 = document.getElementById("geoco1").value;
+    getCoordinates(geo1);	
+}
+
+  document.getElementById('geoco3').onclick = function() {
+    getAddress(latandlng);	
+}
+
+  function getCoordinates(address) {
+    // Check to see if we already have a geocoded object. If not we create one
+    if(!geocoder) {
+      geocoder = new google.maps.Geocoder();	
+    }
+
+    // Creating a GeocoderRequest object
+    var geocoderRequest = {
+      address: address
+    }
+
+    // Making the Geocode request
+    geocoder.geocode(geocoderRequest, function(results, status) {
+      
+      // Check if status is OK before proceeding
+      if (status == google.maps.GeocoderStatus.OK) {
+
+        // Center the map on the returned location
+        map.setCenter(results[0].geometry.location);
+
+        // Check to see if we've already got a Marker object
+        if (!marker) {
+          // Creating a new marker and adding it to the map
+          marker = new google.maps.Marker({
+            map: map
+          });
+        }
+        
+        // Setting the position of the marker to the returned location
+        marker.setPosition(results[0].geometry.location);
+
+        // Check to see if we've already got an InfoWindow object
+        if (!infowindow) {
+          // Creating a new InfoWindow
+          infowindow = new google.maps.InfoWindow();
+        }
+
+        // Creating the content of the InfoWindow to the address
+        // and the returned position
+        var content = '<strong>' + results[0].formatted_address + '</strong><br />';
+        content += 'Lat: ' + results[0].geometry.location.lat() + '<br />';
+        content += 'Lng: ' + results[0].geometry.location.lng();
+
+        // Adding the content to the InfoWindow
+        infowindow.setContent(content);
+
+        // Opening the InfoWindow
+        infowindow.open(map, marker);
+		
+		d3.innerHTML =  results[0].formatted_address + '<br>' + 'Lat and Lng = ' + results[0].geometry.location.toUrlValue() ;
+
+      } 
+	      });
+  }
+  
+  //--------reverse geocoder stuff
+  function getAddress(latLng) {
+
+    // Check to see if a geocoder object already exists
+    if (!geocoder) {
+      geocoder = new google.maps.Geocoder();
+    }
+
+    // Creating a GeocoderRequest object
+    var geocoderRequest = {
+      latLng: latLng
+    }
+
+    geocoder.geocode(geocoderRequest, function(results, status) {
+  
+      // If the infoWindow hasn't yet been created we create it
+      if (!infowindow) {
+        infowindow = new google.maps.InfoWindow();
+      }
+  
+      // Setting the position for the InfoWindow
+      infowindow.setPosition(latLng);
+  
+      // Creating content for the InfoWindow
+      var content = '<h3>Position: ' + latLng.toUrlValue() + '</h3>';
+  
+      // Check to see if the request went allright
+      if (status == google.maps.GeocoderStatus.OK) {
+	
+        // Looping through the result
+        for (var i = 0; i < results.length; i++) {
+          if (results[0].formatted_address) {
+            content += results[i].formatted_address + '<br />';    			
+          }
+        }
+	
+      } else {
+        content += '<p>No address could be found. Status = ' + status + '</p>';
+      }
+
+      // Adding the content to the InfoWindow
+      infowindow.setContent(content);
+  
+      // Opening the InfoWindow
+      infowindow.open(map);
+
+    });	
+		
+  }
+  
+  
+}
+})();  
+	
+	</script>
+	
+  </head>
+  
+  
+  <body>
+  
+
+ 
+    <div id="map"></div>
+  
+    <div id="info">
+	  <label><input type="button" value="getValues" id="getValues" />     Get zoom and map center values.</label><br>
+	  <span id="zoomcenterholder">Current Zoom Level = <br> Current Center = </span>
+	  <br><br>
+	  <span>Get lat and lng of a click on the map.</span><br>
+      <span id="latlngholder">Lat and Lng = </span>
+	  <p>
+	  <em>Shift Drag to Zoom</em>
+	  </p><br><br>
+	  <label><input type="button" value="Reverse Geocode" id="geoco3" />Get address info from above lat and lng in infowindow</label><br><br>
+	  <label><input type="text" value="" id="geoco1" />Enter Address</label><br>
+	  <label><input type="button" value="Geocode" id="geoco2" />Get lat and lng from address</label><br>
+	  <h4>Geocode Results</h4>
+	  <div id="geocodeholder"></div>
+	  <br>
+	  <br>
+	  <br>
+
+	</div>
+	
+
+  
+  
+  </body>
+</html>

@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>google maps user editable</title>
+	<style type="text/css">#map { width: 600px; height: 600px; border: 10px solid #000; border-radius: 9px; box-shadow: 10px 8px 5px #888888; float: left;} 
+	  #info { float: left; margin: 30px;}
+      .underline1 { text-decoration:underline; }
+    </style>
+	
+	<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?v=3&sensor=false"></script>
+
+	<script type="text/javascript">
+	
+	(function() {
+window.onload = function() {
+var map;
+  var mapDiv = document.getElementById("map");
+  var centerlatlng = new google.maps.LatLng(40.330188,-106.180659);
+  var options = {
+    center: centerlatlng,
+    zoom: 9,
+    mapTypeId: google.maps.MapTypeId.TERRAIN
+  };
+  var map = new google.maps.Map( mapDiv, options);
+  
+  var bounds = new google.maps.LatLngBounds( new google.maps.LatLng(39.740986,-106.935425), new google.maps.LatLng(40.984045,-105.303955));
+
+    google.maps.event.addListener(map, 'click', function(event) {
+    placeMarker(event.latLng);
+	//bounds = map.getBounds();  //these two work o.k. pans a little when marker is placed
+	//map.panToBounds(bounds);
+	if ( bounds.contains(event.latLng) == false ) {
+	  bounds.extend(event.latLng);	 
+	  map.fitBounds(bounds);
+	  }
+  });
+
+function placeMarker(location) {
+  var marker = new google.maps.Marker({
+      position: location,
+	  draggable: true,
+      map: map
+  });
+}
+  
+  
+  	google.maps.event.addListener(map, 'bounds_changed', function(event) { console.log(map.getBounds().toUrlValue()); });
+
+  
+}  //end onload
+})();  //end self executing code encapsulating function
+	
+	
+	</script>
+	
+	
+	
+	
+	
+  </head>
+  
+  
+  <body>
+  
+  
+  
+    <div id="map"></div>
+  
+    <div id="info">
+		<label><input type="button" value="a button to use" id="fortcollins" />put whatever functionality on it</label><br>
+        <p>
+		This adds markers on click. The markers are draggable.<br>
+		Checks if click is in bounds and if not fits in bounds. <br>
+		It is also logging the bounds changed event to the console, which could be copied and pasted.
+		</p>
+	</div>
+  
+  </body>
+</html>

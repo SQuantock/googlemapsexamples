@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>google maps layers</title>
+	<link rel="stylesheet" type="text/css" href="menu111.css">
+	<style type="text/css">#map { width: 600px; height: 600px; border: 10px solid #000; border-radius: 9px; box-shadow: 10px 8px 5px #888888; float: left;} 
+	  #info { float: left; margin: 30px;}
+      .underline1 { text-decoration:underline; }
+    </style>
+	<script src="jquery-1.7.2.min.js"></script>
+	<script src="nav1.1.min.js"></script>
+	<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?v=3&libraries=weather&sensor=false"></script>
+	
+	
+      <script>
+		$(document).ready(function() {
+			$('#navigation').navPlugin( {
+			  'itemWidth' : 200,
+			  'itemHeight' : 30,
+			  'navEffect' : 'slide',
+			  'speed' : 250
+			});
+		}); // end ready
+      </script>	
+	
+	
+
+	<script type="text/javascript">
+	
+	(function() {
+window.onload = function() {
+  var mapDiv = document.getElementById("map");
+  var centerlatlng = new google.maps.LatLng(39.729898,-104.977455);
+  var options = {
+    center: centerlatlng,
+    zoom: 12,
+    mapTypeId: google.maps.MapTypeId.ROADMAP
+  };
+  var map = new google.maps.Map( mapDiv, options);
+
+  
+var trafficLayer = new google.maps.TrafficLayer();
+var transitLayer = new google.maps.TransitLayer();
+var bikeLayer = new google.maps.BicyclingLayer();
+var weatherLayer = new google.maps.weather.WeatherLayer({
+  temperatureUnits: google.maps.weather.TemperatureUnit.FAHRENHEIT,
+  windSpeedUnits: google.maps.weather.WindSpeedUnit.MILES_PER_HOUR
+  //labelColor: google.maps.weather.LabelColor.WHITE     //just cnanges icon appearance on map
+});
+var cloudLayer = new google.maps.weather.CloudLayer();
+
+			  google.maps.event.addDomListener(document.getElementById("tl1"), 'click', function() {
+	            if ( document.getElementById("tl1").checked == true ) { trafficLayer.setMap(map);} 
+				else { trafficLayer.setMap(null); }
+              }); //end button listener
+			  
+			  google.maps.event.addDomListener(document.getElementById("trl1"), 'click', function() {
+	            if ( document.getElementById("trl1").checked == true ) { transitLayer.setMap(map);} 
+				else { transitLayer.setMap(null); }
+              }); //end button listener
+			  
+			  			  google.maps.event.addDomListener(document.getElementById("bl1"), 'click', function() {
+	            if ( document.getElementById("bl1").checked == true ) { bikeLayer.setMap(map);} 
+				else { bikeLayer.setMap(null); }
+              }); //end button listener
+			  
+			  			  google.maps.event.addDomListener(document.getElementById("wl1"), 'click', function() {
+	            if ( document.getElementById("wl1").checked == true ) { weatherLayer.setMap(map);} 
+				else { weatherLayer.setMap(null); }
+              }); //end button listener
+			  
+			  			  google.maps.event.addDomListener(document.getElementById("cl1"), 'click', function() {
+	            if ( document.getElementById("cl1").checked == true ) { map.setZoom(4); cloudLayer.setMap(map);} 
+				else { cloudLayer.setMap(null); }
+              }); //end button listener
+
+  
+}  //end onload
+})();  //end self executing code encapsulating function
+	
+	</script>
+	
+	
+	
+	
+	
+  </head>
+  
+  
+  <body>
+  
+  <div id="navigation1">
+  <ul id="navigation">
+	<li><a href="#">Overlays</a>
+	  <ul>
+	    <li><a href="google-maps-markers-windows-options.html">Markers, Windows, Options</a></li>
+		<li><a href="google-maps-markers-array-method.html">Markers Array Method</a></li>
+		<li><a href="google-maps-polylines-polygons.html">Polylines and Polygons</a></li>
+	  </ul>
+	</li> 
+	<li><a href="#">Layers and Services</a>
+	  <ul>
+	    <li><a href="google-maps-street-view.html">Steetview</a></li>
+		<li><a href="google-maps-elevation-service.html">Elevation Service</a></li>
+		<li><a href="google-maps-services.html">Services</a></li>
+		<li><a href="google-maps-layers.html">Layers</a></li>
+		<li><a href="google-maps-panoramio-layer.html">Panoramio Layer</a></li>
+	  </ul>
+	</li>
+    <li><a href="#">Utilities</a>
+	  <ul>
+	    <li><a href="google-maps-info-utility-1.html">Info Utility</a></li>
+		<li><a href="google-maps-geocoding.html">Geocoding</a></li>
+	  </ul>
+	</li>  
+	<li><a href="#">Other</a>
+	  <ul>
+	    <li><a href="google-map-basic-template.html">Basic Template</a></li>
+		<li><a href="google-maps-styled-map.html">Styled Map</a></li>
+		<li><a href="google-charts.html">Charts</a></li>
+		<li><a href="google-maps-bounds-marker-on-click-with-draggable.html">Bounds, Marker on click</a></li>
+	  </ul>
+    </li>
+  </ul>
+  </div>
+  <h2 class="clearit">Google Maps Layers</h2>
+
+
+  
+  
+    <div id="map"></div>
+  
+    <div id="info">
+        <br>
+		<label><input type="checkbox" value="" id="tl1" />View Traffic Layer</label><br>
+		<label><input type="checkbox" value="" id="trl1" />View Transit Layer, only in certain cities</label><br>
+		<label><input type="checkbox" value="" id="bl1" />View Bicycle Layer</label><br>
+		<div style="margin-left: 25px">
+		Dark Green = dedicated bicycle route<br>
+		Light Green = streets with dedicated bike lanes<br>
+		Dashed = streets or paths recommended for bike use
+		</div>
+		<label><input type="checkbox" value="" id="wl1" />View Weather Layer, only for zoom levels 0-12</label><br>
+        <label><input type="checkbox" value="" id="cl1" />View Clouds Layer, only for zoom levels 0-6</label><br>		
+      <p>
+	  to show the weather layer you have to load the library in the url
+	  </p>
+
+	</div>
+  
+  </body>
+</html>

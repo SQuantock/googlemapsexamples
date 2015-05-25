@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>google maps basic reference</title>
+	<style type="text/css">#map { width: 600px; height: 600px; border: 10px solid #000; border-radius: 9px; box-shadow: 10px 8px 5px #888888; float: left;} 
+	  #info { float: left; margin: 30px;}
+      .underline1 { text-decoration:underline; }
+	  #infow1 { width: 350px; background-color: #686868; margin: 0px; }  #infow1 h2 { margin-top: 0; } #infow1 img { float: left; margin-right: 10px; }
+
+    </style>
+	
+	<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?v=3&sensor=false"></script>
+    <script src="infobubble-compiled.js" type="text/javascript"></script>
+	<script type="text/javascript">
+	
+	(function() {
+window.onload = function() {
+  var mapDiv = document.getElementById("map");
+  var centerlatlng = new google.maps.LatLng(40.562199,-105.15893);
+  	  var infowindow = new google.maps.InfoWindow();
+  var options = {
+    center: centerlatlng,
+    zoom: 14,
+    mapTypeId: google.maps.MapTypeId.TERRAIN
+  };
+  var map = new google.maps.Map( mapDiv, options);
+  
+  
+  
+  var markupandstyleContentString = '<div id="infow1">' + 
+        '<img src="webtest1.JPG" alt="" />' +
+        '<h2>Style html in an infowindow</h2>' +
+        '<p>Some sample text</p>' +
+        '<p><a href="http://www.google.com">A sample link</a></p>' +
+        '</div>';
+  
+    var marker1a = new google.maps.Marker({
+    position: new google.maps.LatLng(40.567024,-105.078049),
+    map: map,
+    title:"with html info window"
+});
+  
+  
+    google.maps.event.addListener( marker1a, 'click', function() {
+    infowindow.setContent(markupandstyleContentString);
+    infowindow.open(map, marker1a);
+  });
+  
+  
+  
+  
+          infoBubble = new InfoBubble({
+          map: map,
+          content: '<div class="phoneytext">Some label</div>',
+          position: new google.maps.LatLng(-35, 151),
+          shadowStyle: 1,
+          padding: 0,
+          backgroundColor: 'rgb(47,47,57)',
+          borderRadius: 10,
+          arrowSize: 10,
+          borderWidth: 1,
+          borderColor: '#2c2c2c',
+          disableAutoPan: true,
+          hideCloseButton: true,
+          arrowPosition: 30,
+          backgroundClassName: 'phoney',
+          arrowStyle: 2
+        });
+  
+    var infobubblestyledContentString = 
+        '<h2>Styled infowindow using infobubble utility</h2>' +
+        '<p>Some sample text</p>';
+  
+    var marker1b = new google.maps.Marker({
+    position: new google.maps.LatLng(40.596749,-105.076675),
+    map: map,
+    title:"styled info window"
+});
+  
+  
+    google.maps.event.addListener( marker1b, 'click', function() {
+    infoBubble.setContent(infobubblestyledContentString);
+    infoBubble.open(map, marker1b);
+  });
+  
+  
+  
+  
+  
+  
+  var marker1 = new google.maps.Marker({
+    position: new google.maps.LatLng(40.558678,-105.158386),
+    map: map,
+    title:"with info window"
+});
+
+var contentString1 = '<h2>H2 inside an info window</h2>';
+
+//note, it is better to use 1 infowindow and set the content string for each marker, not make a seperate one 
+//for each marker like is done below
+var infowindow1 = new google.maps.InfoWindow({
+    content: contentString1
+});
+
+google.maps.event.addListener(marker1, 'click', function() {
+  infowindow1.open(map,marker1);
+});
+
+  var marker2 = new google.maps.Marker({
+    position: new google.maps.LatLng(40.5472,-105.154266),
+    map: map,
+    title:"second info window"
+});
+
+var contentString2 = '<h2>H2 inside the second info window</h2>';
+
+var infowindow2 = new google.maps.InfoWindow({
+    content: contentString2
+});
+
+google.maps.event.addListener(marker2, 'click', function() {
+  infowindow2.open(map,marker2);
+});
+
+  var marker3 = new google.maps.Marker({
+    position: new google.maps.LatLng(40.025511,-105.272369),
+    map: map,
+    title:"different style marker",
+	icon : "http://google.com/mapfiles/ms/micons/blue-pushpin.png "
+});
+
+  var marker4 = new google.maps.Marker({
+    position: new google.maps.LatLng(39.998854,-105.282884),
+    map: map,
+    title:"trail style marker",
+	icon : "http://google.com/mapfiles/ms/micons/hiker.png "
+});
+
+//putting linked icons in a variable in a js file that links to everypage would be an easy way to change a broken link
+  var mimage =  "webtest1.JPG";
+  
+   var marker5 = new google.maps.Marker({
+    position: new google.maps.LatLng(40.037275,-105.243616),
+    map: map,
+    title:"local image as marker",
+	icon : mimage
+}); 
+
+
+
+
+  document.getElementById("fortcollins").onclick = function() {
+    map.setOptions( {
+      center : new google.maps.LatLng( 40.618513,-105.055933 ),
+      zoom : 10,
+      mapTypeId : google.maps.MapTypeId.TERRAIN
+    });
+  }  //end onclick
+  
+    document.getElementById("boulder").onclick = function() {
+    map.setOptions( {
+      center : new google.maps.LatLng( 40.011313,-105.270167  ),
+      zoom : 13,
+      mapTypeId : google.maps.MapTypeId.SATELLITE
+    });
+  }  //end onclick
+  
+    document.getElementById("denver").onclick = function() {
+    map.setOptions( {
+      center : new google.maps.LatLng( 39.684468,-104.891138  ),
+      zoom : 8,
+      mapTypeId : google.maps.MapTypeId.ROADMAP
+    });
+  }  //end onclick
+  
+      document.getElementById("denvern1").onclick = function() {
+    map.setOptions( {
+      center : new google.maps.LatLng( 39.720788,-104.987068 ),
+      zoom : 13,
+      mapTypeId : google.maps.MapTypeId.ROADMAP
+    });
+  }  //end onclick
+
+  
+  	      var capitalHillPoints = [
+new google.maps.LatLng(39.740062,-104.987369),
+new google.maps.LatLng(39.739963,-104.972992),
+new google.maps.LatLng(39.727191,-104.972949),
+new google.maps.LatLng(39.727257,-104.987454)	    
+    ];
+	
+    // Creating the polygon
+    var capitalHill = new google.maps.Polygon({
+      paths: capitalHillPoints,
+      map: map,
+      strokeColor: '#ff0000',
+      strokeOpacity: 0.6,
+      strokeWeight: 1,
+      fillColor: '#ff0000',
+      fillOpacity: 0.35
+    });
+  
+  
+    	      var congressParkPoints = [
+new google.maps.LatLng(39.740128,-104.940677),
+new google.maps.LatLng(39.725574,-104.94072),
+new google.maps.LatLng(39.725574,-104.960203),
+new google.maps.LatLng(39.730492,-104.96016),
+new google.maps.LatLng(39.730888,-104.959774)
+	    
+    ];
+	
+    // Creating the polygon
+    var congressPark = new google.maps.Polygon({
+      paths: congressParkPoints,
+      map: map,
+      strokeColor: '#ff0000',
+      strokeOpacity: 0.6,
+      strokeWeight: 1,
+      fillColor: '#ff0000',
+      fillOpacity: 0.35
+    });
+  
+  
+      	      var bakerPoints = [
+new google.maps.LatLng(39.725409,-105.013161),
+new google.maps.LatLng(39.725277,-104.987583),
+new google.maps.LatLng(39.696093,-104.987411),
+new google.maps.LatLng(39.696357,-104.993248),
+new google.maps.LatLng(39.69847,-104.992905),
+new google.maps.LatLng(39.7023,-104.99548),
+new google.maps.LatLng(39.706526,-104.998226),
+new google.maps.LatLng(39.711677,-105.000458),
+new google.maps.LatLng(39.715374,-105.002689),
+new google.maps.LatLng(39.719335,-105.007496),
+new google.maps.LatLng(39.722108,-105.010586),
+new google.maps.LatLng(39.724353,-105.012989)
+	    
+    ];
+	
+    // Creating the polygon
+    var baker = new google.maps.Polygon({
+      paths: bakerPoints,
+      map: map,
+      strokeColor: '#ff0000',
+      strokeOpacity: 0.6,
+      strokeWeight: 1,
+      fillColor: '#ff0000',
+      fillOpacity: 0.35
+    });
+  
+  
+  
+  var bakerCenter = new google.maps.LatLng(39.714714,-104.994278);
+  var congressCenter = new google.maps.LatLng(39.73069,-104.947414);
+  var bakerContentString = "<h2>Baker</h2>" + "<p>" + "This is a just a very quick" + "<br>" + "and innacurate neighborhood boundary" + "</p>";
+  var congressContentString = "<h2>Congress Park</h2>" + "<p>" + "This highlights and" + "<br>" + "shows an infowindow on button click" + "</p>";
+  
+  google.maps.event.addListener( baker, 'click', function() {
+    infowindow.setContent(bakerContentString);
+	infowindow.setPosition(bakerCenter);
+    infowindow.open(map);
+  });
+  
+       document.getElementById("capitalHill").onclick = function() {
+        capitalHill.setOptions({
+        fillColor: '#00FF00',
+        strokeColor: '#ff0000'
+      });
+  }  //end onclick
+  
+       document.getElementById("congressPark").onclick = function() {
+	    congressPark.setOptions({
+        fillColor: '#00FF00',
+        strokeColor: '#ff0000'
+         });
+         infowindow.setContent(congressContentString);
+	     infowindow.setPosition(congressCenter);
+         infowindow.open(map);
+  }  //end onclick
+  
+  
+  
+  
+}  //end onload
+})();  //end self executing code encapsulating function
+	
+	</script>
+	
+	
+	
+	
+	
+  </head>
+  
+  
+  <body>
+  
+  
+  
+    <div id="map"></div>
+  
+    <div id="info">
+		<label><input type="button" value="Fort Collins" id="fortcollins" />Change map settings</label><br>
+	    <label><input type="button" value="Boulder" id="boulder" /> it uses map.setOptions</label><br>
+	    <label><input type="button" value="Denver" id="denver" />and changes it on click</label><br><br>
+		<label><input type="button" value="Denver Neighborhoods" id="denvern1" /></label><br>
+		<label><input type="button" value="Congress Park" id="congressPark" />highlight on rollover</label><br>
+		<label><input type="button" value="Capitol Hill" id="capitalHill" />info and highlight on click/label><br>
+     <br>
+	  <br>
+	  <br>
+	<p>
+	  <span class="underline1">On this page</span>:
+	  <ul>
+	  <li>changed map options on button click</li>
+	  <li>made multiple markers with info windows that stay open for each marker</li>
+	  <li>the way it was done create seperate markers, infowindows and click events seems<br>
+	  really inefficient and should probably done with arrays and self executing functions,<br>
+	  which i will try on a different page</li>
+	  </ul>
+    </p>
+	</div>
+  
+  </body>
+</html>

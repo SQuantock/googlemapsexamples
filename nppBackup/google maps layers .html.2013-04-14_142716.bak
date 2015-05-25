@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>google maps basic layers</title>
+	<style type="text/css">#map { width: 600px; height: 600px; border: 10px solid #000; border-radius: 9px; box-shadow: 10px 8px 5px #888888; float: left;} 
+	  #info { float: left; margin: 30px;}
+      .underline1 { text-decoration:underline; }
+    </style>
+	<script src="jquery-1.7.2.min.js"></script>
+	<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?v=3&libraries=weather&sensor=false"></script>
+
+	<script type="text/javascript">
+	
+	(function() {
+window.onload = function() {
+  var mapDiv = document.getElementById("map");
+  var centerlatlng = new google.maps.LatLng(39.729898,-104.977455);
+  var options = {
+    center: centerlatlng,
+    zoom: 12,
+    mapTypeId: google.maps.MapTypeId.ROADMAP
+  };
+  var map = new google.maps.Map( mapDiv, options);
+
+  
+var trafficLayer = new google.maps.TrafficLayer();
+var transitLayer = new google.maps.TransitLayer();
+var bikeLayer = new google.maps.BicyclingLayer();
+var weatherLayer = new google.maps.weather.WeatherLayer({
+  temperatureUnits: google.maps.weather.TemperatureUnit.FAHRENHEIT,
+  windSpeedUnits: google.maps.weather.WindSpeedUnit.MILES_PER_HOUR
+  //labelColor: google.maps.weather.LabelColor.WHITE     //just cnanges icon appearance on map
+});
+var cloudLayer = new google.maps.weather.CloudLayer();
+
+			  google.maps.event.addDomListener(document.getElementById("tl1"), 'click', function() {
+	            if ( document.getElementById("tl1").checked == true ) { trafficLayer.setMap(map);} 
+				else { trafficLayer.setMap(null); }
+              }); //end button listener
+
+if ( document.getElementById("tl1").checked == true ) { trafficLayer.setMap(map);}
+		
+			   $("#traffic1").toggle(function(){
+                 trafficLayer.setMap(map); },
+				 function() { trafficLayer.setMap(null); }
+        );
+		
+			   $("#transit1").toggle(function(){
+                 transitLayer.setMap(map); },
+				 function() { transitLayer.setMap(null); }
+        );
+		
+			   $("#bicycle1").toggle(function(){
+         bikeLayer.setMap(map); },
+         function(){
+         bikeLayer.setMap(null); }
+        );
+		
+			   $("#weather1").toggle(function(){
+         weatherLayer.setMap(map);},
+         function(){
+         weatherLayer.setMap(null);}
+        );
+		
+		$("#clouds1").toggle(function(){
+         cloudLayer.setMap(map); map.setZoom(4);},
+         function(){
+         cloudLayer.setMap(null);}
+        );
+		
+
+		
+		
+		
+		
+  
+}  //end onload
+})();  //end self executing code encapsulating function
+	
+	</script>
+	
+	
+	
+	
+	
+  </head>
+  
+  
+  <body>
+  
+  
+  
+    <div id="map"></div>
+  
+    <div id="info">
+	    These buttons would probably make more<br>
+		sense as checkboxes for layers<br>
+		<label><input type="checkbox" value="" id="tl1" />View Traffic Layer</label><br>
+		<label><input type="button" value="Traffic Layer" id="traffic1" /></label><br>
+		<label><input type="button" value="Transit Layer" id="transit1" /></label>only in certain cities<br>
+		<label><input type="button" value="Bicycle Layer" id="bicycle1" /></label><br>
+		<div style="margin-left: 25px">
+		Dark Green = dedicated bicycle route<br>
+		Light Green = streets with dedicated bike lanes<br>
+		Dashed = streets or paths recommended for bike use
+		</div>
+		<label><input type="button" value="Weather Layer" id="weather1" />only for zoom levels 0-12</label><br>		
+		<label><input type="button" value="Clouds Layer" id="clouds1" />only for zoom levels 0-6</label><br>
+      <p>
+	  to show the weather layer you have to load the library in the url
+	  </p>
+
+	</div>
+  
+  </body>
+</html>
