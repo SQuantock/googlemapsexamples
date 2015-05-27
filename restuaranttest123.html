@@ -1,0 +1,3046 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Fort Collins Restaurant Finder</title>
+	<style type="text/css">
+	  #map { width: 88%; height: 300px; border: 5px solid #000; border-radius: 9px; box-shadow: 10px 8px 5px #888888; margin: 5px auto 5px auto;} 
+	  #info { float: left; margin: 30px;}
+      #smallerText111 { font-size: 60%; }
+    </style>
+	
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="http://code.jquery.com/mobile/1.3.1/jquery.mobile-1.3.1.min.css" />
+    <script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+    <script src="http://code.jquery.com/mobile/1.3.1/jquery.mobile-1.3.1.min.js"></script>
+	
+	<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?libraries=places&sensor=false"></script>
+	
+
+	<style type="text/css">
+      #popup1 { position:absolute; top: 415px; background-color: #F4F4F4; padding: 0px 0px 0px 5px; border: 1px solid #000; box-shadow: 3px 5px #888888; border-radius: 13px; width: 290px;  left: 50%; margin-left: -145px; z-index: 1000;}
+      #closer111 { float: right;}
+	  .biggerTitle111 { font-size: 125%; font-weight:bold; }
+	  #popupInfo115 { float: right; }
+	  #footerInfo111 { width: 90%; margin-left: auto; margin-right: auto; }
+	  #footercontainer111 {     
+	width:90%;
+    height:20px;
+    border:none;
+    position:relative; }
+	
+	.ui-header .ui-title {
+    margin-right: 10%;
+    margin-left: 10%;
+    }
+	
+.ui-bar-g {
+	border: 1px solid #333333 /*{g-bar-border}*/;
+	background: #333333 /*{g-bar-background-color}*/;
+	color: #FFFFFF /*{g-bar-color}*/;
+	font-weight: bold;
+	text-shadow: 0 /*{g-bar-shadow-x}*/ 1px /*{g-bar-shadow-y}*/ 0 /*{g-bar-shadow-radius}*/ #444444 /*{g-bar-shadow-color}*/;
+	background-image: -webkit-gradient(linear, left top, left bottom, from( #333333 /*{g-bar-background-start}*/), to( #333333 /*{g-bar-background-end}*/)); /* Saf4+, Chrome */
+	background-image: -webkit-linear-gradient( #333333 /*{g-bar-background-start}*/, #333333 /*{g-bar-background-end}*/); /* Chrome 10+, Saf5.1+ */
+	background-image:    -moz-linear-gradient( #333333 /*{g-bar-background-start}*/, #333333 /*{g-bar-background-end}*/); /* FF3.6 */
+	background-image:     -ms-linear-gradient( #333333 /*{g-bar-background-start}*/, #333333 /*{g-bar-background-end}*/); /* IE10 */
+	background-image:      -o-linear-gradient( #333333 /*{g-bar-background-start}*/, #333333 /*{g-bar-background-end}*/); /* Opera 11.10+ */
+	background-image:         linear-gradient( #333333 /*{g-bar-background-start}*/, #333333 /*{g-bar-background-end}*/);
+}
+.ui-bar-g .ui-link-inherit {
+	color: #FFFFFF /*{g-bar-color}*/;
+}
+.ui-bar-g a.ui-link {
+	color: #7cc4e7 /*{g-bar-link-color}*/;
+	font-weight: bold;
+}
+.ui-bar-g a.ui-link:visited {
+    color: #2489ce /*{g-bar-link-visited}*/;
+}
+.ui-bar-g a.ui-link:hover {
+	color: #2489ce /*{g-bar-link-hover}*/;
+}
+.ui-bar-g a.ui-link:active {
+	color: #2489ce /*{g-bar-link-active}*/;
+}
+.ui-bar-g,
+.ui-bar-g input,
+.ui-bar-g select,
+.ui-bar-g textarea,
+.ui-bar-g button {
+	 font-family: Helvetica, Arial, sans-serif /*{global-font-family}*/;
+}
+.ui-body-g,
+.ui-overlay-g {
+	border: 1px solid #aaaaaa /*{g-body-border}*/;
+	color: #333333 /*{g-body-color}*/;
+	text-shadow: 0 /*{g-body-shadow-x}*/ 1px /*{g-body-shadow-y}*/ 0 /*{g-body-shadow-radius}*/ #ffffff /*{g-body-shadow-color}*/;
+	background: #f9f9f9 /*{g-body-background-color}*/;
+	background-image: -webkit-gradient(linear, left top, left bottom, from( #f9f9f9 /*{g-body-background-start}*/), to( #eeeeee /*{g-body-background-end}*/)); /* Saf4+, Chrome */
+	background-image: -webkit-linear-gradient( #f9f9f9 /*{g-body-background-start}*/, #eeeeee /*{g-body-background-end}*/); /* Chrome 10+, Saf5.1+ */
+	background-image:    -moz-linear-gradient( #f9f9f9 /*{g-body-background-start}*/, #eeeeee /*{g-body-background-end}*/); /* FF3.6 */
+	background-image:     -ms-linear-gradient( #f9f9f9 /*{g-body-background-start}*/, #eeeeee /*{g-body-background-end}*/); /* IE10 */
+	background-image:      -o-linear-gradient( #f9f9f9 /*{g-body-background-start}*/, #eeeeee /*{g-body-background-end}*/); /* Opera 11.10+ */
+	background-image:         linear-gradient( #f9f9f9 /*{g-body-background-start}*/, #eeeeee /*{g-body-background-end}*/);
+}
+.ui-overlay-g {
+	background-image: none;
+	border-width: 0;
+}
+.ui-body-g,
+.ui-body-g input,
+.ui-body-g select,
+.ui-body-g textarea,
+.ui-body-g button {
+	 font-family: Helvetica, Arial, sans-serif /*{global-font-family}*/;
+}
+.ui-body-g .ui-link-inherit {
+	color: #333333 /*{g-body-color}*/;
+}
+.ui-body-g .ui-link {
+	color: #2489ce /*{g-body-link-color}*/;
+	font-weight: bold;
+}
+.ui-body-g .ui-link:visited {
+    color: #2489ce /*{g-body-link-visited}*/;
+}
+.ui-body-g .ui-link:hover {
+	color: #2489ce /*{g-body-link-hover}*/;
+}
+.ui-body-g .ui-link:active {
+	color: #2489ce /*{g-body-link-active}*/;
+}
+.ui-btn-up-g {
+	border: 1px solid #cccccc /*{g-bup-border}*/;
+	background: #eeeeee /*{g-bup-background-color}*/;
+	font-weight: bold;
+	color: #2f3e46 /*{g-bup-color}*/;
+	text-shadow: 0 /*{g-bup-shadow-x}*/ 1px /*{g-bup-shadow-y}*/ 0 /*{g-bup-shadow-radius}*/ #ffffff /*{g-bup-shadow-color}*/;
+	background-image: -webkit-gradient(linear, left top, left bottom, from( #ffffff /*{g-bup-background-start}*/), to( #f1f1f1 /*{g-bup-background-end}*/)); /* Saf4+, Chrome */
+	background-image: -webkit-linear-gradient( #ffffff /*{g-bup-background-start}*/, #f1f1f1 /*{g-bup-background-end}*/); /* Chrome 10+, Saf5.1+ */
+	background-image:    -moz-linear-gradient( #ffffff /*{g-bup-background-start}*/, #f1f1f1 /*{g-bup-background-end}*/); /* FF3.6 */
+	background-image:     -ms-linear-gradient( #ffffff /*{g-bup-background-start}*/, #f1f1f1 /*{g-bup-background-end}*/); /* IE10 */
+	background-image:      -o-linear-gradient( #ffffff /*{g-bup-background-start}*/, #f1f1f1 /*{g-bup-background-end}*/); /* Opera 11.10+ */
+	background-image:         linear-gradient( #ffffff /*{g-bup-background-start}*/, #f1f1f1 /*{g-bup-background-end}*/);
+}
+.ui-btn-up-g:visited,
+.ui-btn-up-g a.ui-link-inherit {
+	color: #2f3e46 /*{g-bup-color}*/;
+}
+.ui-btn-hover-g {
+	border: 1px solid #bbbbbb /*{g-bhover-border}*/;
+	background: #dfdfdf /*{g-bhover-background-color}*/;
+	font-weight: bold;
+	color: #2f3e46 /*{g-bhover-color}*/;
+	text-shadow: 0 /*{g-bhover-shadow-x}*/ 1px /*{g-bhover-shadow-y}*/ 0 /*{g-bhover-shadow-radius}*/ #ffffff /*{g-bhover-shadow-color}*/;
+	background-image: -webkit-gradient(linear, left top, left bottom, from( #f6f6f6 /*{g-bhover-background-start}*/), to( #e0e0e0 /*{g-bhover-background-end}*/)); /* Saf4+, Chrome */
+	background-image: -webkit-linear-gradient( #f6f6f6 /*{g-bhover-background-start}*/, #e0e0e0 /*{g-bhover-background-end}*/); /* Chrome 10+, Saf5.1+ */
+	background-image:    -moz-linear-gradient( #f6f6f6 /*{g-bhover-background-start}*/, #e0e0e0 /*{g-bhover-background-end}*/); /* FF3.6 */
+	background-image:     -ms-linear-gradient( #f6f6f6 /*{g-bhover-background-start}*/, #e0e0e0 /*{g-bhover-background-end}*/); /* IE10 */
+	background-image:      -o-linear-gradient( #f6f6f6 /*{g-bhover-background-start}*/, #e0e0e0 /*{g-bhover-background-end}*/); /* Opera 11.10+ */
+	background-image:         linear-gradient( #f6f6f6 /*{g-bhover-background-start}*/, #e0e0e0 /*{g-bhover-background-end}*/);
+}
+.ui-btn-hover-g:visited,
+.ui-btn-hover-g:hover,
+.ui-btn-hover-g a.ui-link-inherit {
+	color: #2f3e46 /*{g-bhover-color}*/;
+}
+.ui-btn-down-g {
+	border: 1px solid #bbbbbb /*{g-bdown-border}*/;
+	background: #d6d6d6 /*{g-bdown-background-color}*/;
+	font-weight: bold;
+	color: #2f3e46 /*{g-bdown-color}*/;
+	text-shadow: 0 /*{g-bdown-shadow-x}*/ 1px /*{g-bdown-shadow-y}*/ 0 /*{g-bdown-shadow-radius}*/ #ffffff /*{g-bdown-shadow-color}*/;
+	background-image: -webkit-gradient(linear, left top, left bottom, from( #d0d0d0 /*{g-bdown-background-start}*/), to( #dfdfdf /*{g-bdown-background-end}*/)); /* Saf4+, Chrome */
+	background-image: -webkit-linear-gradient( #d0d0d0 /*{g-bdown-background-start}*/, #dfdfdf /*{g-bdown-background-end}*/); /* Chrome 10+, Saf5.1+ */
+	background-image:    -moz-linear-gradient( #d0d0d0 /*{g-bdown-background-start}*/, #dfdfdf /*{g-bdown-background-end}*/); /* FF3.6 */
+	background-image:     -ms-linear-gradient( #d0d0d0 /*{g-bdown-background-start}*/, #dfdfdf /*{g-bdown-background-end}*/); /* IE10 */
+	background-image:      -o-linear-gradient( #d0d0d0 /*{g-bdown-background-start}*/, #dfdfdf /*{g-bdown-background-end}*/); /* Opera 11.10+ */
+	background-image:         linear-gradient( #d0d0d0 /*{g-bdown-background-start}*/, #dfdfdf /*{g-bdown-background-end}*/);
+}
+.ui-btn-down-g:visited,
+.ui-btn-down-g:hover,
+.ui-btn-down-g a.ui-link-inherit {
+	color: #2f3e46 /*{g-bdown-color}*/;
+}
+.ui-btn-up-g,
+.ui-btn-hover-g,
+.ui-btn-down-g {
+	 font-family: Helvetica, Arial, sans-serif /*{global-font-family}*/;
+	text-decoration: none;
+}	
+
+	</style>
+	
+	<style type="text/css">
+	        
+        @media screen and (min-width: 961px){
+			 html { background-color: #333; }
+		     body.ui-mobile-viewport, div.ui-mobile-viewport { background-color: #333; }
+			
+            .ui-page {
+                width: 900px !important;
+                margin: 0 auto !important;
+                position: relative !important;
+            }
+        }
+	
+	</style>
+
+
+	<script type="text/javascript">
+	
+	(function() {
+window.onload = function() {
+
+$('#popup1').hide();
+var yPos111;  //this is if you want to scroll back to the item clicked
+var inProcess111 = 1;
+var timerHolder111;
+var listid111;
+var listid222;
+var aryidholder111;
+var retryer111 = 0;
+
+var loadingmessage111 = {
+	text: '---Hold on a second--- Button unavailable while data is loading',
+	textVisible: true,
+	theme: 'b'
+};
+
+
+
+var africanAry = [];
+
+var allasianAry = [];
+var chineseAry = [];
+var indianAry = [];
+var japaneseAry = [];
+var koreanAry = [];
+var middleeasternAry = [];
+var mongolianAry = [];
+var nepaleseAry = [];
+var thaiAry = [];
+var vietnameseAry = [];
+
+var britishAry = [];
+var frenchAry = [];
+var greekAry = [];
+var italianAry = [];
+var mediterraneanAry = [];
+var tapasAry = [];
+
+var mexicanAry = [];
+var southamericanAry = [];
+
+var breakfastAry = [];
+var bagelAry = [];
+
+var americanAry = [];
+var bistroAry = [];
+var grillAry = [];
+var pizzaAry = [];
+var pubAry = [];
+var sandwichAry = [];
+var southernAry = [];
+
+var bakeryAry = [];
+var barAry = [];
+var cafeAry = [];
+var finediningAry = [];
+var frozenyogurtAry = [];
+var icecreamAry = [];
+var veggieAry = [];
+var opennowAry = [];
+
+var currentMarkerAry = [];
+
+  var mapDiv = document.getElementById("map");
+  var infowindow = new google.maps.InfoWindow();
+  var centerlatlng = new google.maps.LatLng(40.528414,-105.073242);
+  var campuslatlng = new google.maps.LatLng(40.570936,-105.10603);
+  var oldtownlatlng = new google.maps.LatLng(40.587005,-105.075645);
+  var southlatlng = new google.maps.LatLng(40.530371,-105.041485);
+  
+  var options = {
+    center: centerlatlng,
+    zoom: 11,
+    mapTypeId: google.maps.MapTypeId.ROADMAP
+  };
+  
+  var map = new google.maps.Map( mapDiv, options);
+
+  var service = new google.maps.places.PlacesService(map);
+  var ftcollinsbounds = new google.maps.LatLngBounds( new google.maps.LatLng(40.477117,-105.140533), new google.maps.LatLng(40.642615,-104.979172));
+  
+  
+    			  google.maps.event.addDomListener(document.getElementById("fc111"), 'click', function() {
+					map.setOptions( {
+					  center : centerlatlng,
+					  zoom : 11
+					});
+              }); //end button listener
+  
+  			  google.maps.event.addDomListener(document.getElementById("oldtown"), 'click', function() {
+				map.setOptions( {
+				  center : oldtownlatlng,
+				  zoom : 15
+				});
+              }); //end button listener
+			  
+			  google.maps.event.addDomListener(document.getElementById("campuswest"), 'click', function() {
+				map.setOptions( {
+				  center : campuslatlng,
+				  zoom : 14
+				});
+              }); //end button listener
+			  
+			  google.maps.event.addDomListener(document.getElementById("harmonyrd"), 'click', function() {
+				map.setOptions( {
+				  center : southlatlng,
+				  zoom : 13
+				});
+              }); //end button listener
+
+  
+  
+  
+  
+  
+    var requestThai = {
+      bounds: ftcollinsbounds,
+	  types: ['restaurant'],
+      keyword: 'Thai'
+    };
+	
+	var requestafrican = {
+      bounds: ftcollinsbounds,
+	  //types: ['restaurant'],
+      keyword: 'African Restaurant'
+    };	
+	
+	var requestallasian = {
+      bounds: ftcollinsbounds,
+	  //types: ['restaurant'],
+      keyword: 'Asian Restaurant'
+    };	
+	
+	var requestchinese = {
+      bounds: ftcollinsbounds,
+	  types: ['restaurant'],
+      keyword: 'Chinese'
+    };
+	
+	var requestindian = {
+      bounds: ftcollinsbounds,
+	  types: ['restaurant'],
+      keyword: 'Indian and Buffet'
+    };	
+	
+	var requestjapanese = {
+      bounds: ftcollinsbounds,
+	  types: ['restaurant'],
+      keyword: 'Japanese'
+    };	
+	
+		var requestkorean = {
+      bounds: ftcollinsbounds,
+	  types: ['restaurant'],
+      keyword: 'Korean'
+    };
+	
+	var requestmiddleeastern = {
+      bounds: ftcollinsbounds,
+	  types: ['restaurant'],
+      keyword: 'Middle Eastern'
+    };	
+	
+	var requestmongolian = {
+      bounds: ftcollinsbounds,
+	  types: ['restaurant'],
+      keyword: 'Mongolian',
+	  name: 'Mongolian'
+    };	
+	
+	var requestnepalese = {
+      bounds: ftcollinsbounds,
+	  types: ['restaurant'],
+      keyword: 'Nepalese and Nepal'
+    };	
+
+	var requestvietnamese = {
+      bounds: ftcollinsbounds,
+	  types: ['restaurant'],
+      keyword: 'Vietnamese  and Vietnam'
+    };	
+	
+	
+	
+	var requestbritish = {
+      bounds: ftcollinsbounds,
+	  types: ['restaurant'],
+      keyword: 'British',
+	  name: 'British'
+    };
+	
+	var requestfrench = {
+      bounds: ftcollinsbounds,
+	  //types: ['restaurant'],
+      keyword: 'France Restaurant'
+    };
+	
+	var requestgreek = {
+      bounds: ftcollinsbounds,
+	  types: ['restaurant'],
+      keyword: 'Greek'
+    };
+
+	var requestitalian = {
+      bounds: ftcollinsbounds,
+	  types: ['restaurant'],
+      keyword: 'Italian'
+    };	
+	
+		var requestmediterranean = {
+      bounds: ftcollinsbounds,
+	  types: ['restaurant'],
+      keyword: 'Mediterranean'
+    };	
+	
+		var requesttapas = {
+      bounds: ftcollinsbounds,
+	  //types: ['restaurant'],
+      keyword: 'Tapas Restaurant'
+    };
+	
+
+	
+	
+	
+	var requestsouthamerican = {
+      bounds: ftcollinsbounds,
+	  types: ['restaurant'],
+      keyword: 'South American'
+    };	
+	
+	var requestmexican = {
+      bounds: ftcollinsbounds,
+	  types: ['restaurant'],
+      keyword: 'Mexican'
+    };	
+	
+	
+	
+	
+	var requestbreakfast = {
+      bounds: ftcollinsbounds,
+	  //types: ['restaurant'],
+      keyword: 'Breakfast Restaurant'
+    };	
+	
+	var requestbagel = {
+      bounds: ftcollinsbounds,
+	  //types: ['restaurant'],
+      keyword: 'Bagel Restaurant'
+    };	
+	
+	
+	
+	
+	
+	
+	var requestamerican = {
+      bounds: ftcollinsbounds,
+	  types: ['restaurant'],
+      keyword: 'American'
+    };	
+	
+	var requestbistro = {
+      bounds: ftcollinsbounds,
+	  types: ['restaurant'],
+      keyword: 'American Bistro'
+    };	
+	
+	var requestgrill = {
+      bounds: ftcollinsbounds,
+	  types: ['restaurant'],
+      keyword: 'Grill'
+    };	
+	
+	var requestpizza = {
+      bounds: ftcollinsbounds,
+	  types: ['restaurant'],
+      keyword: 'Pizza'
+    };	
+	
+	var requestpub = {
+      bounds: ftcollinsbounds,
+	  //types: ['restaurant'],
+      keyword: 'Pub Restaurant'
+    };	
+	
+	var requestsandwich = {
+      bounds: ftcollinsbounds,
+	  types: ['restaurant'],
+      keyword: 'Sandwich'
+    };	
+	
+	var requestsouthern = {
+      bounds: ftcollinsbounds,
+	  types: ['restaurant'],
+      keyword: 'Southern'
+    };	
+	
+		
+
+		
+	var requestbakery = {
+      bounds: ftcollinsbounds,
+	  //types: ['restaurant'],
+      keyword: 'Bakery'
+    };			
+	
+	var requestbar = {
+      bounds: ftcollinsbounds,
+	  types: ['bar'],
+      //keyword: 'Bar'
+    };	
+	
+	var requestcafe = {
+      bounds: ftcollinsbounds,
+	  //types: ['cafe']
+      keyword: 'Coffee'
+    };	
+	
+	
+	var requestfinedining = {
+      bounds: ftcollinsbounds,
+	  types: ['restaurant'],
+      keyword: 'Fine Dining Restaurant'
+    };	
+	
+	var requestfrozenyogurt = {
+      bounds: ftcollinsbounds,
+	  //types: ['restaurant'],
+      keyword: 'Frozen Yogurt Restaurant'
+    };
+	
+	var requesticecream = {
+      bounds: ftcollinsbounds,
+	  //types: ['restaurant'],
+      keyword: 'Ice Cream'
+    };
+
+	var requestveggie = {
+      bounds: ftcollinsbounds,
+	  //types: ['restaurant'],
+      keyword: 'Vegetarian Friendly Restaurant'
+    };
+
+	var requestopennow = {
+      bounds: ftcollinsbounds,
+	  types: ['restaurant'],
+      //keyword: 'Fine Dining Restaurant'
+	  openNow: true
+    };	
+	
+
+	
+
+	
+	
+	
+	
+	
+	
+function callback(results, status, pagination) {
+  if (status == google.maps.places.PlacesServiceStatus.OK) {
+  
+  
+  
+  
+  
+   switch ( aryidholder111 ) {
+    case 'thai' :
+	  $("#thai").addClass("buttonCS111");
+	  break;
+    case 'african' :
+	  $("#african").addClass("buttonCS111");
+	  break;
+	case 'american' :
+	  $("#american").addClass("buttonCS111");
+	  break;
+	case 'bistro' :
+	  $("#bistro").addClass("buttonCS111");
+	  break;
+	case 'grill' :
+	  $("#grill").addClass("buttonCS111");
+	  break;
+	case 'pizza' :
+	  $("#pizza").addClass("buttonCS111");
+	  break;
+	case 'pub' :
+	  $("#pub").addClass("buttonCS111");
+	  break;
+	case 'sandwich' :
+	  $("#sandwich").addClass("buttonCS111");
+	  break;
+	case 'southern' :
+	  $("#southern").addClass("buttonCS111");
+	  break;
+	case 'allasian' :
+	  $("#allasian").addClass("buttonCS111");
+	  break;
+	case 'chinese' :
+	  $("#chinese").addClass("buttonCS111");
+	  break;
+	case 'indian' :
+	  $("#indian").addClass("buttonCS111");
+	  break;
+	case 'japanese' :
+	  $("#japanese").addClass("buttonCS111");
+	  break;
+	case 'korean' :
+	  $("#korean").addClass("buttonCS111");
+	  break;
+	case 'middleeastern' :
+	  $("#middleeastern").addClass("buttonCS111");
+	  break;
+	case 'mongolian' :
+	  $("#mongolian").addClass("buttonCS111");
+	  break;
+	case 'nepalese' :
+	  $("#nepalese").addClass("buttonCS111");
+	  break;
+	case 'vietnamese' :
+	  $("#vietnamese").addClass("buttonCS111");
+	  break;
+	case 'british' :
+	  $("#british").addClass("buttonCS111");
+	  break;
+	case 'french' :
+	  $("#french").addClass("buttonCS111");
+	  break;
+	case 'greek' :
+	  $("#greek").addClass("buttonCS111");
+	  break;
+	case 'italian' :
+	  $("#italian").addClass("buttonCS111");
+	  break;
+	case 'mediterranean' :
+	  $("#mediterranean").addClass("buttonCS111");
+	  break;
+	case 'tapas' :
+	  $("#tapas").addClass("buttonCS111");
+	  break;
+	case 'mexican' :
+	  $("#mexican").addClass("buttonCS111");
+	  break;
+	case 'southamerican' :
+	  $("#southamerican").addClass("buttonCS111");
+	  break;
+	case 'breakfast' :
+	  $("#breakfast").addClass("buttonCS111");
+	  break;
+	case 'bagel' :
+	  $("#bagel").addClass("buttonCS111");
+	  break;	
+	case 'bakery' :
+	  $("#bakery").addClass("buttonCS111");
+	  break;
+	case 'bar' :
+	  $("#bar").addClass("buttonCS111");
+	  break;
+	case 'cafe' :
+	  $("#cafe").addClass("buttonCS111");
+	  break;
+	case 'finedining' :
+	  $("#finedining").addClass("buttonCS111");
+	  break;
+	case 'frozenyogurt' :
+	  $("#frozenyogurt").addClass("buttonCS111");
+	  break;
+	case 'icecream' :
+	  $("#icecream").addClass("buttonCS111");
+	  break;
+	case 'veggie' :
+	  $("#veggie").addClass("buttonCS111");
+	  break;
+	case 'opennow' :
+	  $("#opennow").addClass("buttonCS111");
+	  break;	  
+  }
+  
+  
+  
+  
+
+  
+  
+  
+  
+    for (var i = 0; i < results.length; i++) {
+      var place = results[i];
+	  
+	  createListItem(results[i]);
+	  
+	  if ( i == (results.length - 1) && pagination.hasNextPage ) { setTimeout( function(){ pagination.nextPage();},2000 );  }
+	  
+	  if ( i == (results.length - 1) && !pagination.hasNextPage ) { inProcess111 = 1;  }  //use this for setting inProcess
+
+    }  //end for loop
+  }  //end if
+  else if (google.maps.places.PlacesServiceStatus.ZERO_RESULTS) { $(listid222).append(' Zero Results'); inProcess111 = 1; }
+  else if (google.maps.places.PlacesServiceStatus.OVER_QUERY_LIMIT) { alert('OVER_QUERY_LIMIT, You can try clicking the button again or reloading the page. If that does not work you will have to try again tomorrow'); inProcess111 = 1; }
+  else { alert('Problem Retrieving Data, try clicking the listing again'); inProcess111 = 1; }
+}  //end callback function
+
+
+
+
+var placeDetailsCurrent;
+
+function callbackDetail(placeDetails, status) {
+  if (status == google.maps.places.PlacesServiceStatus.OK) {
+		
+		var splitter1 = placeDetails.vicinity;
+		var splitter2 = splitter1.split(",");
+		
+		var rating111;
+		if ( placeDetails.rating == undefined ) { rating111= "No Ratings"; } else { rating111 = placeDetails.rating; }
+		
+		var website111;
+		if ( placeDetails.website == undefined ) { website111= ""; } else { website111 = '<a href="' + placeDetails.website + '" target="_blank">Website</a>'; }
+		
+		var gplus111;
+		if ( placeDetails.url == undefined ) { gplus111= ""; } else { gplus111 = '<a href="' + placeDetails.url + '" target="_blank">Google+ Page</a>'; }
+							   
+		var directionsHolder111 = placeDetails.formatted_address;
+		directionsHolder111 = directionsHolder111.split(" ").join("+");
+		
+		var attributions111 = "";
+		if ( placeDetails.html_attributions[0] == undefined ) { attributions111= ""; } 
+		else { 
+		 for (var i = 0; i < placeDetails.html_attributions.length; i++) { attributions111 += '<br>Data Attributions: ' + placeDetails.html_attributions[i] + '<br>'; }
+		}
+		
+		var phonenumber111 = '<a href="tel: 1' + placeDetails.formatted_phone_number + '">' + placeDetails.formatted_phone_number + '</a> ' ;
+		
+		
+		placeDetailsCurrent = '<a href="#" id="closer111" data-role="button" data-theme="a" data-icon="delete" data-iconpos="notext" class="ui-btn-right">Close</a>' + 
+		'<p>' + '<span class="biggerTitle111">' + placeDetails.name + '</span>' + '<br>' +
+		splitter2[0] + '<br>' +
+		splitter2[1] + '<br>' +
+		phonenumber111 + ' <a href="#popupInfo111" id="popupInfo112" data-rel="popup" data-role="button" class="ui-icon-alt" data-inline="true" data-transition="pop" data-icon="info" data-theme="c" data-iconpos="notext">Click # to Call</a>' + '<br>' +
+		//placeDetails.opening_hours.open_now + '<br>' +
+		website111 + '<br><br>' +
+		
+		'Average Rating(0-5): ' + rating111 + '<br>' + 
+		gplus111 + ' (Reviews and Info)' + '<br><br><br>'  +
+		'<a href="http://maps.google.com/maps?daddr=' + directionsHolder111 + '" target="_blank">Get Directions</a>' + ' (Opens Google Maps)' + '<br>' +
+		attributions111 + '</p>'
+		;
+		
+		$('#popup1').html(placeDetailsCurrent).fadeIn(300);    $('#closer111').buttonMarkup( "refresh" ); $('#popupInfo112').buttonMarkup( "refresh" );     
+    
+        retryer111 = 0;
+		
+	}  //end status ok
+	else if (google.maps.places.PlacesServiceStatus.ZERO_RESULTS) { if ( retryer111 < 3 ) { setTimeout( function(){service.getDetails(theDetailRequest, callbackDetail);}, 500 );    retryer111++;  } else {  placeDetailsCurrent = '<a href="#" id="closer111" data-role="button" data-theme="a" data-icon="delete" data-iconpos="notext" class="ui-btn-right">Close</a> <p>No Information</p>'; $('#popup1').html(placeDetailsCurrent).fadeIn(300); $('#closer111').buttonMarkup( "refresh" ); }  }
+	//else if (google.maps.places.PlacesServiceStatus.OVER_QUERY_LIMIT) { alert('OVER_QUERY_LIMIT, You can try clicking the button again or reloading the page. Else you will have to try again tomorrow');  }
+	else { alert('Problem Retrieving Data for ' + place.name + '-' + status + ' if data is needed, try clicking the listing again' ); }
+}  //end callbackDetail function
+
+
+		
+		
+		
+		
+		
+
+
+
+var $tempListItem;
+
+
+function createListItem(place) {
+
+  var infoWCurrent;
+  
+  var splitter3 = place.vicinity;
+  var splitter4 = splitter3.split(",");
+  
+  infoWCurrent = '<b>' + place.name + '</b>' + '<br>' + splitter4[0] + '<br>' + splitter4[1] + '<br>';
+
+  var theDetailRequest = { reference: place.reference };
+
+  var marker = new google.maps.Marker({
+    map: map,
+    position: place.geometry.location
+  });
+  
+    google.maps.event.addListener(marker, 'click', function() { 
+	$('#popup1').html("<br><br><br><br><br><br><br><br><br><br><br><br><br><br>");   //this is only to give the appearance of reloading the div when clicking markers
+	service.getDetails(theDetailRequest, callbackDetail);
+    infowindow.setContent( infoWCurrent );
+    infowindow.open(map, this);
+  });
+  
+  
+  
+  
+  
+  
+  switch ( aryidholder111 ) {
+    case 'thai' :
+	  thaiAry.push( marker );
+	  break;
+	case 'african' :
+	  africanAry.push( marker );
+	  break;
+	case 'american' :
+	  americanAry.push( marker );
+	  break;
+	case 'bistro' :
+	  bistroAry.push( marker );
+	  break;
+	case 'grill' :
+	  grillAry.push( marker );
+	  break;
+	case 'pizza' :
+	  pizzaAry.push( marker );
+	  break;
+	case 'pub' :
+	  pubAry.push( marker );
+	  break;
+	case 'sandwich' :
+	  sandwichAry.push( marker );
+	  break;
+	case 'southern' :
+	  southernAry.push( marker );
+	  break;
+	case 'allasian' :
+	  allasianAry.push( marker );
+	  break;
+	case 'chinese' :
+	  chineseAry.push( marker );
+	  break;
+	case 'indian' :
+	  indianAry.push( marker );
+	  break;
+	case 'japanese' :
+	  japaneseAry.push( marker );
+	  break;
+	case 'korean' :
+	  koreanAry.push( marker );
+	  break;
+	case 'middleeastern' :
+	  middleeasternAry.push( marker );
+	  break;
+	case 'mongolian' :
+	  mongolianAry.push( marker );
+	  break;
+	case 'nepalese' :
+	  nepaleseAry.push( marker );
+	  break;
+	case 'vietnamese' :
+	  vietnameseAry.push( marker );
+	  break;
+	case 'british' :
+	  britishAry.push( marker );
+	  break;
+	case 'french' :
+	  frenchAry.push( marker );
+	  break;
+	case 'greek' :
+	  greekAry.push( marker );
+	  break;
+	case 'italian' :
+	  italianAry.push( marker );
+	  break;
+	case 'mediterranean' :
+	  mediterraneanAry.push( marker );
+	  break;
+	case 'tapas' :
+	  tapasAry.push( marker );
+	  break;
+	case 'mexican' :
+	  mexicanAry.push( marker );
+	  break;
+	case 'southamerican' :
+	  southamericanAry.push( marker );
+	  break;
+	case 'breakfast' :
+	  breakfastAry.push( marker );
+	  break;
+	case 'bagel' :
+	  bagelAry.push( marker );
+	  break;	
+	case 'bakery' :
+	  bakeryAry.push( marker );
+	  break;
+	case 'bar' :
+	  barAry.push( marker );
+	  break;
+	case 'cafe' :
+	  cafeAry.push( marker );
+	  break;
+	case 'finedining' :
+	  finediningAry.push( marker );
+	  break;
+	case 'frozenyogurt' :
+	  frozenyogurtAry.push( marker );
+	  break;
+	case 'icecream' :
+	  icecreamAry.push( marker );
+	  break;
+	case 'veggie' :
+	  veggieAry.push( marker );
+	  break;
+	case 'opennow' :
+	  opennowAry.push( marker );
+	  break;	  
+  }
+      	
+  
+  
+  currentMarkerAry.push( marker );
+  
+
+  $tempListItem = $('<li><a href="#">' + place.name + '</a></li>');
+
+
+  $tempListItem.click( function(evt) {   
+
+    $("html, body").animate({ scrollTop: 0 }, "slow", function() {
+     
+  
+	  infowindow.setContent(infoWCurrent);
+	  infowindow.open(map, marker);
+	  map.setZoom(15);
+
+    });  //end animate
+	
+	service.getDetails(theDetailRequest, callbackDetail);
+	
+  });  //end click
+
+  
+  $(listid222).append($tempListItem).listview('refresh');
+
+} //end createListItem
+
+
+
+
+
+
+
+		$('#thai').click( function() {  
+		
+		//this is so that you can't start a new request while one is in process
+		    if ( inProcess111 == 0 ) { $(this).trigger( "collapse" ); 
+				$.mobile.loading( 'show', loadingmessage111 );
+				//setTimeout( function(){ $.mobile.loading( 'hide' ); },2000 );  //this just does the loading animation once
+				//$( "#popupDelay111" ).popup( "open" );   //this line is used if just using a popup, not currently using this
+				timerHolder111 = setInterval( function(){ if ( inProcess111 == 1 ) { $.mobile.loading( 'hide' ); clearInterval(timerHolder111); } }, 400);
+				return; 
+			}	
+			
+		  listid111 = '#thai';   //this bit makes it so it scrolls back down to the heading of the item you clicked, such as thai restaurant
+		  listid222 = '#thairesults';
+		  aryidholder111 = 'thai';  //this is used to signal which array to populate
+		  
+		  if ( $('#thai').hasClass('buttonCS111') == false ) { 
+		  
+		    //have to clear markers here because pagination redoes it
+		  	for (var i = 0; i < currentMarkerAry.length; i++) {
+			  currentMarkerAry[i].setMap(null);
+			}
+	        currentMarkerAry.length = 0;  //removing the markers 
+			
+			
+			$.mobile.loading( 'show' );   //shows loading animation
+			setTimeout( function(){ $.mobile.loading( 'hide' ); }, 700 );   //hides loading animation, it's not exactly when results appear just indicates something is happening to user
+			
+			inProcess111 = 0;  //sets variable to indicate api call is in progress
+			
+		    service.nearbySearch(requestThai, callback); }
+		  else { 
+		  //currentMarkerAry will be whatever the last heading hit was, this is used to remove the last headings markers
+		  for (var i = 0; i < currentMarkerAry.length; i++) {
+		    currentMarkerAry[i].setMap(null);
+		  }
+		  currentMarkerAry.length = 0;  //removing the markers from dom for performance
+		  
+		  //this makes the markers for the heading appear and repopulates the shared array so the next heading knows what to remove
+		  for (var i = 0; i < thaiAry.length; i++) {
+		    thaiAry[i].setMap(map);
+		    currentMarkerAry.push( thaiAry[i] );
+		  }
+          }  //end else
+		  
+		});  //end click
+		
+		
+		
+		
+				$('#african').click( function() { 
+
+            if ( inProcess111 == 0 ) { $(this).trigger( "collapse" ); 
+				$.mobile.loading( 'show', loadingmessage111 );
+				timerHolder111 = setInterval( function(){ if ( inProcess111 == 1 ) { $.mobile.loading( 'hide' ); clearInterval(timerHolder111); } }, 400);
+				return; 
+			}	
+			
+		  listid111 = '#african';   //this bit makes it so it scrolls back down to the heading of the item you clicked, such as thai restaurant
+		  listid222 = '#africanresults';
+		  aryidholder111 = 'african';  //this is used to signal which array to populate
+		  
+		  if ( $('#african').hasClass('buttonCS111') == false ) { 
+		  
+		  	for (var i = 0; i < currentMarkerAry.length; i++) {
+			  currentMarkerAry[i].setMap(null);
+			  }
+	        currentMarkerAry.length = 0;  //removing the markers 
+			
+			$.mobile.loading( 'show' );
+			setTimeout( function(){ $.mobile.loading( 'hide' ); }, 700 );
+			
+			inProcess111 = 0;
+			
+		    service.nearbySearch(requestafrican, callback); }
+			
+		  else { 
+		  //currentMarkerAry will be whatever the last heading hit was, this is used to remove the last headings markers
+		  for (var i = 0; i < currentMarkerAry.length; i++) {
+		    currentMarkerAry[i].setMap(null);
+		  }
+		  currentMarkerAry.length = 0;  //removing the markers from dom for performance
+		  
+		  //this makes the markers for the heading appear and repopulates the shared array so the next heading knows what to remove
+		  for (var i = 0; i < africanAry.length; i++) {
+		    africanAry[i].setMap(map);
+		    currentMarkerAry.push( africanAry[i] );
+		  }
+          }  //end else
+		  
+		});  //end click		
+		
+		
+				
+
+
+		
+		$('#american').click( function() {  
+				
+				if ( inProcess111 == 0 ) { 
+				    $(this).trigger( "collapse" ); 
+					$.mobile.loading( 'show', loadingmessage111 );
+					timerHolder111 = setInterval( function(){ if ( inProcess111 == 1 ) { $.mobile.loading( 'hide' ); clearInterval(timerHolder111); } }, 400);
+					return; 
+				}
+				
+		  listid111 = '#american';   //this bit makes it so it scrolls back down to the heading of the item you clicked, such as thai restaurant
+		  listid222 = '#americanresults';
+		  aryidholder111 = 'american';  //this is used to signal which array to populate
+		  
+		  if ( $('#american').hasClass('buttonCS111') == false ) { 
+		  
+		  	for (var i = 0; i < currentMarkerAry.length; i++) {
+			  currentMarkerAry[i].setMap(null);
+			  }
+	        currentMarkerAry.length = 0;  //removing the markers 
+			
+			$.mobile.loading( 'show' );
+			setTimeout( function(){ $.mobile.loading( 'hide' ); }, 700 );
+			
+			inProcess111 = 0;			
+			
+		    service.nearbySearch(requestamerican, callback); }
+			
+		  else { 
+		  //currentMarkerAry will be whatever the last heading hit was, this is used to remove the last headings markers
+		  for (var i = 0; i < currentMarkerAry.length; i++) {
+		    currentMarkerAry[i].setMap(null);
+		  }
+		  currentMarkerAry.length = 0;  //removing the markers from dom for performance
+		  
+		  //this makes the markers for the heading appear and repopulates the shared array so the next heading knows what to remove
+		  for (var i = 0; i < americanAry.length; i++) {
+		    americanAry[i].setMap(map);
+		    currentMarkerAry.push( americanAry[i] );
+		  }
+          }  //end else
+		  
+		});  //end click	
+
+
+		$('#bistro').click( function() {  
+		
+				if ( inProcess111 == 0 ) { 
+				    $(this).trigger( "collapse" ); 
+					$.mobile.loading( 'show', loadingmessage111 );
+					timerHolder111 = setInterval( function(){ if ( inProcess111 == 1 ) { $.mobile.loading( 'hide' ); clearInterval(timerHolder111); } }, 400);
+					return; 
+				}		
+		
+		  listid111 = '#bistro';   //this bit makes it so it scrolls back down to the heading of the item you clicked, such as thai restaurant
+		  listid222 = '#bistroresults';
+		  aryidholder111 = 'bistro';  //this is used to signal which array to populate
+		  
+		  if ( $('#bistro').hasClass('buttonCS111') == false ) { 
+		  
+		  	for (var i = 0; i < currentMarkerAry.length; i++) {
+			  currentMarkerAry[i].setMap(null);
+			  }
+	        currentMarkerAry.length = 0;  //removing the markers 
+			
+			$.mobile.loading( 'show' );
+			setTimeout( function(){ $.mobile.loading( 'hide' ); }, 700 );
+			
+			inProcess111 = 0;			
+			
+		    service.nearbySearch(requestbistro, callback); }
+			
+		  else { 
+		  //currentMarkerAry will be whatever the last heading hit was, this is used to remove the last headings markers
+		  for (var i = 0; i < currentMarkerAry.length; i++) {
+		    currentMarkerAry[i].setMap(null);
+		  }
+		  currentMarkerAry.length = 0;  //removing the markers from dom for performance
+		  
+		  //this makes the markers for the heading appear and repopulates the shared array so the next heading knows what to remove
+		  for (var i = 0; i < bistroAry.length; i++) {
+		    bistroAry[i].setMap(map);
+		    currentMarkerAry.push( bistroAry[i] );
+		  }
+          }  //end else
+		  
+		});  //end click
+
+
+				$('#grill').click( function() { 
+
+            if ( inProcess111 == 0 ) { $(this).trigger( "collapse" ); 
+				$.mobile.loading( 'show', loadingmessage111 );
+				timerHolder111 = setInterval( function(){ if ( inProcess111 == 1 ) { $.mobile.loading( 'hide' ); clearInterval(timerHolder111); } }, 400);
+				return; 
+			}	
+			
+		  listid111 = '#grill';   //this bit makes it so it scrolls back down to the heading of the item you clicked, such as thai restaurant
+		  listid222 = '#grillresults';
+		  aryidholder111 = 'grill';  //this is used to signal which array to populate
+		  
+		  if ( $('#grill').hasClass('buttonCS111') == false ) { 
+		  
+		  	for (var i = 0; i < currentMarkerAry.length; i++) {
+			  currentMarkerAry[i].setMap(null);
+			  }
+	        currentMarkerAry.length = 0;  //removing the markers 
+			
+			$.mobile.loading( 'show' );
+			setTimeout( function(){ $.mobile.loading( 'hide' ); }, 700 );
+			
+			inProcess111 = 0;
+			
+		    service.nearbySearch(requestgrill, callback); }
+			
+		  else { 
+		  //currentMarkerAry will be whatever the last heading hit was, this is used to remove the last headings markers
+		  for (var i = 0; i < currentMarkerAry.length; i++) {
+		    currentMarkerAry[i].setMap(null);
+		  }
+		  currentMarkerAry.length = 0;  //removing the markers from dom for performance
+		  
+		  //this makes the markers for the heading appear and repopulates the shared array so the next heading knows what to remove
+		  for (var i = 0; i < grillAry.length; i++) {
+		    grillAry[i].setMap(map);
+		    currentMarkerAry.push( grillAry[i] );
+		  }
+          }  //end else
+		  
+		});  //end click
+
+
+		$('#pizza').click( function() {  
+				if ( inProcess111 == 0 ) { 
+				    $(this).trigger( "collapse" ); 
+					$.mobile.loading( 'show', loadingmessage111 );
+					timerHolder111 = setInterval( function(){ if ( inProcess111 == 1 ) { $.mobile.loading( 'hide' ); clearInterval(timerHolder111); } }, 400);
+					return; 
+				}
+				
+		  listid111 = '#pizza';   //this bit makes it so it scrolls back down to the heading of the item you clicked, such as thai restaurant
+		  listid222 = '#pizzaresults';
+		  aryidholder111 = 'pizza';  //this is used to signal which array to populate
+		  
+		  if ( $('#pizza').hasClass('buttonCS111') == false ) { 
+		  
+		  	for (var i = 0; i < currentMarkerAry.length; i++) {
+			  currentMarkerAry[i].setMap(null);
+			  }
+	        currentMarkerAry.length = 0;  //removing the markers 
+			
+			$.mobile.loading( 'show' );
+			setTimeout( function(){ $.mobile.loading( 'hide' ); }, 700 );
+			
+			inProcess111 = 0;
+			
+		    service.nearbySearch(requestpizza, callback); }
+			
+		  else { 
+		  //currentMarkerAry will be whatever the last heading hit was, this is used to remove the last headings markers
+		  for (var i = 0; i < currentMarkerAry.length; i++) {
+		    currentMarkerAry[i].setMap(null);
+		  }
+		  currentMarkerAry.length = 0;  //removing the markers from dom for performance
+		  
+		  //this makes the markers for the heading appear and repopulates the shared array so the next heading knows what to remove
+		  for (var i = 0; i < pizzaAry.length; i++) {
+		    pizzaAry[i].setMap(map);
+		    currentMarkerAry.push( pizzaAry[i] );
+		  }
+          }  //end else
+		  
+		});  //end click	
+
+
+		$('#pub').click( function() {  
+		
+				if ( inProcess111 == 0 ) { 
+				    $(this).trigger( "collapse" ); 
+					$.mobile.loading( 'show', loadingmessage111 );
+					timerHolder111 = setInterval( function(){ if ( inProcess111 == 1 ) { $.mobile.loading( 'hide' ); clearInterval(timerHolder111); } }, 400);
+					return; 
+				}		
+		
+		  listid111 = '#pub';   //this bit makes it so it scrolls back down to the heading of the item you clicked, such as thai restaurant
+		  listid222 = '#pubresults';
+		  aryidholder111 = 'pub';  //this is used to signal which array to populate
+		  
+		  if ( $('#pub').hasClass('buttonCS111') == false ) { 
+		  
+		  	for (var i = 0; i < currentMarkerAry.length; i++) {
+			  currentMarkerAry[i].setMap(null);
+			  }
+	        currentMarkerAry.length = 0;  //removing the markers 
+			
+			$.mobile.loading( 'show' );
+			setTimeout( function(){ $.mobile.loading( 'hide' ); }, 700 );
+			
+			inProcess111 = 0;			
+			
+		    service.nearbySearch(requestpub, callback); }
+			
+		  else { 
+		  //currentMarkerAry will be whatever the last heading hit was, this is used to remove the last headings markers
+		  for (var i = 0; i < currentMarkerAry.length; i++) {
+		    currentMarkerAry[i].setMap(null);
+		  }
+		  currentMarkerAry.length = 0;  //removing the markers from dom for performance
+		  
+		  //this makes the markers for the heading appear and repopulates the shared array so the next heading knows what to remove
+		  for (var i = 0; i < pubAry.length; i++) {
+		    pubAry[i].setMap(map);
+		    currentMarkerAry.push( pubAry[i] );
+		  }
+          }  //end else
+		  
+		});  //end click	
+
+
+		$('#sandwich').click( function() {  
+		
+				if ( inProcess111 == 0 ) { 
+				    $(this).trigger( "collapse" ); 
+					$.mobile.loading( 'show', loadingmessage111 );
+					timerHolder111 = setInterval( function(){ if ( inProcess111 == 1 ) { $.mobile.loading( 'hide' ); clearInterval(timerHolder111); } }, 400);
+					return; 
+				}		
+		
+		  listid111 = '#sandwich';   //this bit makes it so it scrolls back down to the heading of the item you clicked, such as thai restaurant
+		  listid222 = '#sandwichresults';
+		  aryidholder111 = 'sandwich';  //this is used to signal which array to populate
+		  
+		  if ( $('#sandwich').hasClass('buttonCS111') == false ) { 
+		  
+		  	for (var i = 0; i < currentMarkerAry.length; i++) {
+			  currentMarkerAry[i].setMap(null);
+			  }
+	        currentMarkerAry.length = 0;  //removing the markers 
+			
+			$.mobile.loading( 'show' );
+			setTimeout( function(){ $.mobile.loading( 'hide' ); }, 700 );
+			
+			inProcess111 = 0;			
+			
+		    service.nearbySearch(requestsandwich, callback); }
+			
+		  else { 
+		  //currentMarkerAry will be whatever the last heading hit was, this is used to remove the last headings markers
+		  for (var i = 0; i < currentMarkerAry.length; i++) {
+		    currentMarkerAry[i].setMap(null);
+		  }
+		  currentMarkerAry.length = 0;  //removing the markers from dom for performance
+		  
+		  //this makes the markers for the heading appear and repopulates the shared array so the next heading knows what to remove
+		  for (var i = 0; i < sandwichAry.length; i++) {
+		    sandwichAry[i].setMap(map);
+		    currentMarkerAry.push( sandwichAry[i] );
+		  }
+          }  //end else
+		  
+		});  //end click	
+
+
+		$('#southern').click( function() { 
+
+				if ( inProcess111 == 0 ) { 
+				    $(this).trigger( "collapse" ); 
+					$.mobile.loading( 'show', loadingmessage111 );
+					timerHolder111 = setInterval( function(){ if ( inProcess111 == 1 ) { $.mobile.loading( 'hide' ); clearInterval(timerHolder111); } }, 400);
+					return; 
+				}
+		
+		  listid111 = '#southern';   //this bit makes it so it scrolls back down to the heading of the item you clicked, such as thai restaurant
+		  listid222 = '#southernresults';
+		  aryidholder111 = 'southern';  //this is used to signal which array to populate
+		  
+		  if ( $('#southern').hasClass('buttonCS111') == false ) { 
+		  
+		  	for (var i = 0; i < currentMarkerAry.length; i++) {
+			  currentMarkerAry[i].setMap(null);
+			  }
+	        currentMarkerAry.length = 0;  //removing the markers 
+			
+			$.mobile.loading( 'show' );
+			setTimeout( function(){ $.mobile.loading( 'hide' ); }, 700 );
+			
+			inProcess111 = 0;			
+			
+		    service.nearbySearch(requestsouthern, callback); }
+			
+		  else { 
+		  //currentMarkerAry will be whatever the last heading hit was, this is used to remove the last headings markers
+		  for (var i = 0; i < currentMarkerAry.length; i++) {
+		    currentMarkerAry[i].setMap(null);
+		  }
+		  currentMarkerAry.length = 0;  //removing the markers from dom for performance
+		  
+		  //this makes the markers for the heading appear and repopulates the shared array so the next heading knows what to remove
+		  for (var i = 0; i < southernAry.length; i++) {
+		    southernAry[i].setMap(map);
+		    currentMarkerAry.push( southernAry[i] );
+		  }
+          }  //end else
+		  
+		});  //end click		
+		
+		
+	
+
+
+				$('#allasian').click( function() { 
+
+            if ( inProcess111 == 0 ) { $(this).trigger( "collapse" ); 
+				$.mobile.loading( 'show', loadingmessage111 );
+				timerHolder111 = setInterval( function(){ if ( inProcess111 == 1 ) { $.mobile.loading( 'hide' ); clearInterval(timerHolder111); } }, 400);
+				return; 
+			}	
+			
+		  listid111 = '#allasian';   //this bit makes it so it scrolls back down to the heading of the item you clicked, such as thai restaurant
+		  listid222 = '#allasianresults';
+		  aryidholder111 = 'allasian';  //this is used to signal which array to populate
+		  
+		  if ( $('#allasian').hasClass('buttonCS111') == false ) { 
+		  
+		  	for (var i = 0; i < currentMarkerAry.length; i++) {
+			  currentMarkerAry[i].setMap(null);
+			  }
+	        currentMarkerAry.length = 0;  //removing the markers 
+			
+			$.mobile.loading( 'show' );
+			setTimeout( function(){ $.mobile.loading( 'hide' ); }, 700 );
+			
+			inProcess111 = 0;
+			
+		    service.nearbySearch(requestallasian, callback); }
+			
+		  else { 
+		  //currentMarkerAry will be whatever the last heading hit was, this is used to remove the last headings markers
+		  for (var i = 0; i < currentMarkerAry.length; i++) {
+		    currentMarkerAry[i].setMap(null);
+		  }
+		  currentMarkerAry.length = 0;  //removing the markers from dom for performance
+		  
+		  //this makes the markers for the heading appear and repopulates the shared array so the next heading knows what to remove
+		  for (var i = 0; i < allasianAry.length; i++) {
+		    allasianAry[i].setMap(map);
+		    currentMarkerAry.push( allasianAry[i] );
+		  }
+          }  //end else
+		  
+		});  //end click
+		
+		
+				$('#chinese').click( function() { 
+
+            if ( inProcess111 == 0 ) { $(this).trigger( "collapse" ); 
+				$.mobile.loading( 'show', loadingmessage111 );
+				timerHolder111 = setInterval( function(){ if ( inProcess111 == 1 ) { $.mobile.loading( 'hide' ); clearInterval(timerHolder111); } }, 400);
+				return; 
+			}	
+			
+		  listid111 = '#chinese';   //this bit makes it so it scrolls back down to the heading of the item you clicked, such as thai restaurant
+		  listid222 = '#chineseresults';
+		  aryidholder111 = 'chinese';  //this is used to signal which array to populate
+		  
+		  if ( $('#chinese').hasClass('buttonCS111') == false ) { 
+		  
+		  	for (var i = 0; i < currentMarkerAry.length; i++) {
+			  currentMarkerAry[i].setMap(null);
+			  }
+	        currentMarkerAry.length = 0;  //removing the markers 
+			
+			$.mobile.loading( 'show' );
+			setTimeout( function(){ $.mobile.loading( 'hide' ); }, 700 );
+			
+			inProcess111 = 0;
+			
+		    service.nearbySearch(requestchinese, callback); }
+			
+		  else { 
+		  //currentMarkerAry will be whatever the last heading hit was, this is used to remove the last headings markers
+		  for (var i = 0; i < currentMarkerAry.length; i++) {
+		    currentMarkerAry[i].setMap(null);
+		  }
+		  currentMarkerAry.length = 0;  //removing the markers from dom for performance
+		  
+		  //this makes the markers for the heading appear and repopulates the shared array so the next heading knows what to remove
+		  for (var i = 0; i < chineseAry.length; i++) {
+		    chineseAry[i].setMap(map);
+		    currentMarkerAry.push( chineseAry[i] );
+		  }
+          }  //end else
+		  
+		});  //end click
+
+
+				$('#indian').click( function() { 
+
+            if ( inProcess111 == 0 ) { $(this).trigger( "collapse" ); 
+				$.mobile.loading( 'show', loadingmessage111 );
+				timerHolder111 = setInterval( function(){ if ( inProcess111 == 1 ) { $.mobile.loading( 'hide' ); clearInterval(timerHolder111); } }, 400);
+				return; 
+			}	
+			
+		  listid111 = '#indian';   //this bit makes it so it scrolls back down to the heading of the item you clicked, such as thai restaurant
+		  listid222 = '#indianresults';
+		  aryidholder111 = 'indian';  //this is used to signal which array to populate
+		  
+		  if ( $('#indian').hasClass('buttonCS111') == false ) { 
+		  
+		  	for (var i = 0; i < currentMarkerAry.length; i++) {
+			  currentMarkerAry[i].setMap(null);
+			  }
+	        currentMarkerAry.length = 0;  //removing the markers 
+			
+			$.mobile.loading( 'show' );
+			setTimeout( function(){ $.mobile.loading( 'hide' ); }, 700 );
+			
+			inProcess111 = 0;
+			
+		    service.nearbySearch(requestindian, callback); }
+			
+		  else { 
+		  //currentMarkerAry will be whatever the last heading hit was, this is used to remove the last headings markers
+		  for (var i = 0; i < currentMarkerAry.length; i++) {
+		    currentMarkerAry[i].setMap(null);
+		  }
+		  currentMarkerAry.length = 0;  //removing the markers from dom for performance
+		  
+		  //this makes the markers for the heading appear and repopulates the shared array so the next heading knows what to remove
+		  for (var i = 0; i < indianAry.length; i++) {
+		    indianAry[i].setMap(map);
+		    currentMarkerAry.push( indianAry[i] );
+		  }
+          }  //end else
+		  
+		});  //end click
+
+
+				$('#japanese').click( function() { 
+
+            if ( inProcess111 == 0 ) { $(this).trigger( "collapse" ); 
+				$.mobile.loading( 'show', loadingmessage111 );
+				timerHolder111 = setInterval( function(){ if ( inProcess111 == 1 ) { $.mobile.loading( 'hide' ); clearInterval(timerHolder111); } }, 400);
+				return; 
+			}	
+			
+		  listid111 = '#japanese';   //this bit makes it so it scrolls back down to the heading of the item you clicked, such as thai restaurant
+		  listid222 = '#japaneseresults';
+		  aryidholder111 = 'japanese';  //this is used to signal which array to populate
+		  
+		  if ( $('#japanese').hasClass('buttonCS111') == false ) { 
+		  
+		  	for (var i = 0; i < currentMarkerAry.length; i++) {
+			  currentMarkerAry[i].setMap(null);
+			  }
+	        currentMarkerAry.length = 0;  //removing the markers 
+			
+			$.mobile.loading( 'show' );
+			setTimeout( function(){ $.mobile.loading( 'hide' ); }, 700 );
+			
+			inProcess111 = 0;
+			
+		    service.nearbySearch(requestjapanese, callback); }
+			
+		  else { 
+		  //currentMarkerAry will be whatever the last heading hit was, this is used to remove the last headings markers
+		  for (var i = 0; i < currentMarkerAry.length; i++) {
+		    currentMarkerAry[i].setMap(null);
+		  }
+		  currentMarkerAry.length = 0;  //removing the markers from dom for performance
+		  
+		  //this makes the markers for the heading appear and repopulates the shared array so the next heading knows what to remove
+		  for (var i = 0; i < japaneseAry.length; i++) {
+		    japaneseAry[i].setMap(map);
+		    currentMarkerAry.push( japaneseAry[i] );
+		  }
+          }  //end else
+		  
+		});  //end click
+
+
+				$('#korean').click( function() { 
+
+            if ( inProcess111 == 0 ) { $(this).trigger( "collapse" ); 
+				$.mobile.loading( 'show', loadingmessage111 );
+				timerHolder111 = setInterval( function(){ if ( inProcess111 == 1 ) { $.mobile.loading( 'hide' ); clearInterval(timerHolder111); } }, 400);
+				return; 
+			}	
+			
+		  listid111 = '#korean';   //this bit makes it so it scrolls back down to the heading of the item you clicked, such as thai restaurant
+		  listid222 = '#koreanresults';
+		  aryidholder111 = 'korean';  //this is used to signal which array to populate
+		  
+		  if ( $('#korean').hasClass('buttonCS111') == false ) { 
+		  
+		  	for (var i = 0; i < currentMarkerAry.length; i++) {
+			  currentMarkerAry[i].setMap(null);
+			  }
+	        currentMarkerAry.length = 0;  //removing the markers 
+			
+			$.mobile.loading( 'show' );
+			setTimeout( function(){ $.mobile.loading( 'hide' ); }, 700 );
+			
+			inProcess111 = 0;
+			
+		    service.nearbySearch(requestkorean, callback); }
+			
+		  else { 
+		  //currentMarkerAry will be whatever the last heading hit was, this is used to remove the last headings markers
+		  for (var i = 0; i < currentMarkerAry.length; i++) {
+		    currentMarkerAry[i].setMap(null);
+		  }
+		  currentMarkerAry.length = 0;  //removing the markers from dom for performance
+		  
+		  //this makes the markers for the heading appear and repopulates the shared array so the next heading knows what to remove
+		  for (var i = 0; i < koreanAry.length; i++) {
+		    koreanAry[i].setMap(map);
+		    currentMarkerAry.push( koreanAry[i] );
+		  }
+          }  //end else
+		  
+		});  //end click
+
+
+				$('#middleeastern').click( function() { 
+
+            if ( inProcess111 == 0 ) { $(this).trigger( "collapse" ); 
+				$.mobile.loading( 'show', loadingmessage111 );
+				timerHolder111 = setInterval( function(){ if ( inProcess111 == 1 ) { $.mobile.loading( 'hide' ); clearInterval(timerHolder111); } }, 400);
+				return; 
+			}	
+			
+		  listid111 = '#middleeastern';   //this bit makes it so it scrolls back down to the heading of the item you clicked, such as thai restaurant
+		  listid222 = '#middleeasternresults';
+		  aryidholder111 = 'middleeastern';  //this is used to signal which array to populate
+		  
+		  if ( $('#middleeastern').hasClass('buttonCS111') == false ) { 
+		  
+		  	for (var i = 0; i < currentMarkerAry.length; i++) {
+			  currentMarkerAry[i].setMap(null);
+			  }
+	        currentMarkerAry.length = 0;  //removing the markers 
+			
+			$.mobile.loading( 'show' );
+			setTimeout( function(){ $.mobile.loading( 'hide' ); }, 700 );
+			
+			inProcess111 = 0;
+			
+		    service.nearbySearch(requestmiddleeastern, callback); }
+			
+		  else { 
+		  //currentMarkerAry will be whatever the last heading hit was, this is used to remove the last headings markers
+		  for (var i = 0; i < currentMarkerAry.length; i++) {
+		    currentMarkerAry[i].setMap(null);
+		  }
+		  currentMarkerAry.length = 0;  //removing the markers from dom for performance
+		  
+		  //this makes the markers for the heading appear and repopulates the shared array so the next heading knows what to remove
+		  for (var i = 0; i < middleeasternAry.length; i++) {
+		    middleeasternAry[i].setMap(map);
+		    currentMarkerAry.push( middleeasternAry[i] );
+		  }
+          }  //end else
+		  
+		});  //end click
+
+
+				$('#mongolian').click( function() { 
+
+            if ( inProcess111 == 0 ) { $(this).trigger( "collapse" ); 
+				$.mobile.loading( 'show', loadingmessage111 );
+				timerHolder111 = setInterval( function(){ if ( inProcess111 == 1 ) { $.mobile.loading( 'hide' ); clearInterval(timerHolder111); } }, 400);
+				return; 
+			}	
+			
+		  listid111 = '#mongolian';   //this bit makes it so it scrolls back down to the heading of the item you clicked, such as thai restaurant
+		  listid222 = '#mongolianresults';
+		  aryidholder111 = 'mongolian';  //this is used to signal which array to populate
+		  
+		  if ( $('#mongolian').hasClass('buttonCS111') == false ) { 
+		  
+		  	for (var i = 0; i < currentMarkerAry.length; i++) {
+			  currentMarkerAry[i].setMap(null);
+			  }
+	        currentMarkerAry.length = 0;  //removing the markers 
+			
+			$.mobile.loading( 'show' );
+			setTimeout( function(){ $.mobile.loading( 'hide' ); }, 700 );
+			
+			inProcess111 = 0;
+			
+		    service.nearbySearch(requestmongolian, callback); }
+			
+		  else { 
+		  //currentMarkerAry will be whatever the last heading hit was, this is used to remove the last headings markers
+		  for (var i = 0; i < currentMarkerAry.length; i++) {
+		    currentMarkerAry[i].setMap(null);
+		  }
+		  currentMarkerAry.length = 0;  //removing the markers from dom for performance
+		  
+		  //this makes the markers for the heading appear and repopulates the shared array so the next heading knows what to remove
+		  for (var i = 0; i < mongolianAry.length; i++) {
+		    mongolianAry[i].setMap(map);
+		    currentMarkerAry.push( mongolianAry[i] );
+		  }
+          }  //end else
+		  
+		});  //end click
+
+
+				$('#nepalese').click( function() { 
+
+            if ( inProcess111 == 0 ) { $(this).trigger( "collapse" ); 
+				$.mobile.loading( 'show', loadingmessage111 );
+				timerHolder111 = setInterval( function(){ if ( inProcess111 == 1 ) { $.mobile.loading( 'hide' ); clearInterval(timerHolder111); } }, 400);
+				return; 
+			}	
+			
+		  listid111 = '#nepalese';   //this bit makes it so it scrolls back down to the heading of the item you clicked, such as thai restaurant
+		  listid222 = '#nepaleseresults';
+		  aryidholder111 = 'nepalese';  //this is used to signal which array to populate
+		  
+		  if ( $('#nepalese').hasClass('buttonCS111') == false ) { 
+		  
+		  	for (var i = 0; i < currentMarkerAry.length; i++) {
+			  currentMarkerAry[i].setMap(null);
+			  }
+	        currentMarkerAry.length = 0;  //removing the markers 
+			
+			$.mobile.loading( 'show' );
+			setTimeout( function(){ $.mobile.loading( 'hide' ); }, 700 );
+			
+			inProcess111 = 0;
+			
+		    service.nearbySearch(requestnepalese, callback); }
+			
+		  else { 
+		  //currentMarkerAry will be whatever the last heading hit was, this is used to remove the last headings markers
+		  for (var i = 0; i < currentMarkerAry.length; i++) {
+		    currentMarkerAry[i].setMap(null);
+		  }
+		  currentMarkerAry.length = 0;  //removing the markers from dom for performance
+		  
+		  //this makes the markers for the heading appear and repopulates the shared array so the next heading knows what to remove
+		  for (var i = 0; i < nepaleseAry.length; i++) {
+		    nepaleseAry[i].setMap(map);
+		    currentMarkerAry.push( nepaleseAry[i] );
+		  }
+          }  //end else
+		  
+		});  //end click		
+
+
+				$('#vietnamese').click( function() { 
+
+            if ( inProcess111 == 0 ) { $(this).trigger( "collapse" ); 
+				$.mobile.loading( 'show', loadingmessage111 );
+				timerHolder111 = setInterval( function(){ if ( inProcess111 == 1 ) { $.mobile.loading( 'hide' ); clearInterval(timerHolder111); } }, 400);
+				return; 
+			}	
+			
+		  listid111 = '#vietnamese';   //this bit makes it so it scrolls back down to the heading of the item you clicked, such as thai restaurant
+		  listid222 = '#vietnameseresults';
+		  aryidholder111 = 'vietnamese';  //this is used to signal which array to populate
+		  
+		  if ( $('#vietnamese').hasClass('buttonCS111') == false ) { 
+		  
+		  	for (var i = 0; i < currentMarkerAry.length; i++) {
+			  currentMarkerAry[i].setMap(null);
+			  }
+	        currentMarkerAry.length = 0;  //removing the markers 
+			
+			$.mobile.loading( 'show' );
+			setTimeout( function(){ $.mobile.loading( 'hide' ); }, 700 );
+			
+			inProcess111 = 0;
+			
+		    service.nearbySearch(requestvietnamese, callback); }
+			
+		  else { 
+		  //currentMarkerAry will be whatever the last heading hit was, this is used to remove the last headings markers
+		  for (var i = 0; i < currentMarkerAry.length; i++) {
+		    currentMarkerAry[i].setMap(null);
+		  }
+		  currentMarkerAry.length = 0;  //removing the markers from dom for performance
+		  
+		  //this makes the markers for the heading appear and repopulates the shared array so the next heading knows what to remove
+		  for (var i = 0; i < vietnameseAry.length; i++) {
+		    vietnameseAry[i].setMap(map);
+		    currentMarkerAry.push( vietnameseAry[i] );
+		  }
+          }  //end else
+		  
+		});  //end click
+
+
+
+
+	
+				$('#british').click( function() { 
+
+            if ( inProcess111 == 0 ) { $(this).trigger( "collapse" ); 
+				$.mobile.loading( 'show', loadingmessage111 );
+				timerHolder111 = setInterval( function(){ if ( inProcess111 == 1 ) { $.mobile.loading( 'hide' ); clearInterval(timerHolder111); } }, 400);
+				return; 
+			}	
+			
+		  listid111 = '#british';   //this bit makes it so it scrolls back down to the heading of the item you clicked, such as thai restaurant
+		  listid222 = '#britishresults';
+		  aryidholder111 = 'british';  //this is used to signal which array to populate
+		  
+		  if ( $('#british').hasClass('buttonCS111') == false ) { 
+		  
+		  	for (var i = 0; i < currentMarkerAry.length; i++) {
+			  currentMarkerAry[i].setMap(null);
+			  }
+	        currentMarkerAry.length = 0;  //removing the markers 
+			
+			$.mobile.loading( 'show' );
+			setTimeout( function(){ $.mobile.loading( 'hide' ); }, 700 );
+			
+			inProcess111 = 0;
+			
+		    service.nearbySearch(requestbritish, callback); }
+			
+		  else { 
+		  //currentMarkerAry will be whatever the last heading hit was, this is used to remove the last headings markers
+		  for (var i = 0; i < currentMarkerAry.length; i++) {
+		    currentMarkerAry[i].setMap(null);
+		  }
+		  currentMarkerAry.length = 0;  //removing the markers from dom for performance
+		  
+		  //this makes the markers for the heading appear and repopulates the shared array so the next heading knows what to remove
+		  for (var i = 0; i < britishAry.length; i++) {
+		    britishAry[i].setMap(map);
+		    currentMarkerAry.push( britishAry[i] );
+		  }
+          }  //end else
+		  
+		});  //end click
+
+
+				$('#french').click( function() { 
+
+            if ( inProcess111 == 0 ) { $(this).trigger( "collapse" ); 
+				$.mobile.loading( 'show', loadingmessage111 );
+				timerHolder111 = setInterval( function(){ if ( inProcess111 == 1 ) { $.mobile.loading( 'hide' ); clearInterval(timerHolder111); } }, 400);
+				return; 
+			}	
+			
+		  listid111 = '#french';   //this bit makes it so it scrolls back down to the heading of the item you clicked, such as thai restaurant
+		  listid222 = '#frenchresults';
+		  aryidholder111 = 'french';  //this is used to signal which array to populate
+		  
+		  if ( $('#french').hasClass('buttonCS111') == false ) { 
+		  
+		  	for (var i = 0; i < currentMarkerAry.length; i++) {
+			  currentMarkerAry[i].setMap(null);
+			  }
+	        currentMarkerAry.length = 0;  //removing the markers 
+			
+			$.mobile.loading( 'show' );
+			setTimeout( function(){ $.mobile.loading( 'hide' ); }, 700 );
+			
+			inProcess111 = 0;
+			
+		    service.nearbySearch(requestfrench, callback); }
+			
+		  else { 
+		  //currentMarkerAry will be whatever the last heading hit was, this is used to remove the last headings markers
+		  for (var i = 0; i < currentMarkerAry.length; i++) {
+		    currentMarkerAry[i].setMap(null);
+		  }
+		  currentMarkerAry.length = 0;  //removing the markers from dom for performance
+		  
+		  //this makes the markers for the heading appear and repopulates the shared array so the next heading knows what to remove
+		  for (var i = 0; i < frenchAry.length; i++) {
+		    frenchAry[i].setMap(map);
+		    currentMarkerAry.push( frenchAry[i] );
+		  }
+          }  //end else
+		  
+		});  //end click
+
+
+				$('#greek').click( function() { 
+
+            if ( inProcess111 == 0 ) { $(this).trigger( "collapse" ); 
+				$.mobile.loading( 'show', loadingmessage111 );
+				timerHolder111 = setInterval( function(){ if ( inProcess111 == 1 ) { $.mobile.loading( 'hide' ); clearInterval(timerHolder111); } }, 400);
+				return; 
+			}	
+			
+		  listid111 = '#greek';   //this bit makes it so it scrolls back down to the heading of the item you clicked, such as thai restaurant
+		  listid222 = '#greekresults';
+		  aryidholder111 = 'greek';  //this is used to signal which array to populate
+		  
+		  if ( $('#greek').hasClass('buttonCS111') == false ) { 
+		  
+		  	for (var i = 0; i < currentMarkerAry.length; i++) {
+			  currentMarkerAry[i].setMap(null);
+			  }
+	        currentMarkerAry.length = 0;  //removing the markers 
+			
+			$.mobile.loading( 'show' );
+			setTimeout( function(){ $.mobile.loading( 'hide' ); }, 700 );
+			
+			inProcess111 = 0;
+			
+		    service.nearbySearch(requestgreek, callback); }
+			
+		  else { 
+		  //currentMarkerAry will be whatever the last heading hit was, this is used to remove the last headings markers
+		  for (var i = 0; i < currentMarkerAry.length; i++) {
+		    currentMarkerAry[i].setMap(null);
+		  }
+		  currentMarkerAry.length = 0;  //removing the markers from dom for performance
+		  
+		  //this makes the markers for the heading appear and repopulates the shared array so the next heading knows what to remove
+		  for (var i = 0; i < greekAry.length; i++) {
+		    greekAry[i].setMap(map);
+		    currentMarkerAry.push( greekAry[i] );
+		  }
+          }  //end else
+		  
+		});  //end click
+
+
+				$('#italian').click( function() { 
+
+            if ( inProcess111 == 0 ) { $(this).trigger( "collapse" ); 
+				$.mobile.loading( 'show', loadingmessage111 );
+				timerHolder111 = setInterval( function(){ if ( inProcess111 == 1 ) { $.mobile.loading( 'hide' ); clearInterval(timerHolder111); } }, 400);
+				return; 
+			}	
+			
+		  listid111 = '#italian';   //this bit makes it so it scrolls back down to the heading of the item you clicked, such as thai restaurant
+		  listid222 = '#italianresults';
+		  aryidholder111 = 'italian';  //this is used to signal which array to populate
+		  
+		  if ( $('#italian').hasClass('buttonCS111') == false ) { 
+		  
+		  	for (var i = 0; i < currentMarkerAry.length; i++) {
+			  currentMarkerAry[i].setMap(null);
+			  }
+	        currentMarkerAry.length = 0;  //removing the markers 
+			
+			$.mobile.loading( 'show' );
+			setTimeout( function(){ $.mobile.loading( 'hide' ); }, 700 );
+			
+			inProcess111 = 0;
+			
+		    service.nearbySearch(requestitalian, callback); }
+			
+		  else { 
+		  //currentMarkerAry will be whatever the last heading hit was, this is used to remove the last headings markers
+		  for (var i = 0; i < currentMarkerAry.length; i++) {
+		    currentMarkerAry[i].setMap(null);
+		  }
+		  currentMarkerAry.length = 0;  //removing the markers from dom for performance
+		  
+		  //this makes the markers for the heading appear and repopulates the shared array so the next heading knows what to remove
+		  for (var i = 0; i < italianAry.length; i++) {
+		    italianAry[i].setMap(map);
+		    currentMarkerAry.push( italianAry[i] );
+		  }
+          }  //end else
+		  
+		});  //end click
+
+
+				$('#mediterranean').click( function() { 
+
+            if ( inProcess111 == 0 ) { $(this).trigger( "collapse" ); 
+				$.mobile.loading( 'show', loadingmessage111 );
+				timerHolder111 = setInterval( function(){ if ( inProcess111 == 1 ) { $.mobile.loading( 'hide' ); clearInterval(timerHolder111); } }, 400);
+				return; 
+			}	
+			
+		  listid111 = '#mediterranean';   //this bit makes it so it scrolls back down to the heading of the item you clicked, such as thai restaurant
+		  listid222 = '#mediterraneanresults';
+		  aryidholder111 = 'mediterranean';  //this is used to signal which array to populate
+		  
+		  if ( $('#mediterranean').hasClass('buttonCS111') == false ) { 
+		  
+		  	for (var i = 0; i < currentMarkerAry.length; i++) {
+			  currentMarkerAry[i].setMap(null);
+			  }
+	        currentMarkerAry.length = 0;  //removing the markers 
+			
+			$.mobile.loading( 'show' );
+			setTimeout( function(){ $.mobile.loading( 'hide' ); }, 700 );
+			
+			inProcess111 = 0;
+			
+		    service.nearbySearch(requestmediterranean, callback); }
+			
+		  else { 
+		  //currentMarkerAry will be whatever the last heading hit was, this is used to remove the last headings markers
+		  for (var i = 0; i < currentMarkerAry.length; i++) {
+		    currentMarkerAry[i].setMap(null);
+		  }
+		  currentMarkerAry.length = 0;  //removing the markers from dom for performance
+		  
+		  //this makes the markers for the heading appear and repopulates the shared array so the next heading knows what to remove
+		  for (var i = 0; i < mediterraneanAry.length; i++) {
+		    mediterraneanAry[i].setMap(map);
+		    currentMarkerAry.push( mediterraneanAry[i] );
+		  }
+          }  //end else
+		  
+		});  //end click
+
+
+				$('#tapas').click( function() { 
+
+            if ( inProcess111 == 0 ) { $(this).trigger( "collapse" ); 
+				$.mobile.loading( 'show', loadingmessage111 );
+				timerHolder111 = setInterval( function(){ if ( inProcess111 == 1 ) { $.mobile.loading( 'hide' ); clearInterval(timerHolder111); } }, 400);
+				return; 
+			}	
+			
+		  listid111 = '#tapas';   //this bit makes it so it scrolls back down to the heading of the item you clicked, such as thai restaurant
+		  listid222 = '#tapasresults';
+		  aryidholder111 = 'tapas';  //this is used to signal which array to populate
+		  
+		  if ( $('#tapas').hasClass('buttonCS111') == false ) { 
+		  
+		  	for (var i = 0; i < currentMarkerAry.length; i++) {
+			  currentMarkerAry[i].setMap(null);
+			  }
+	        currentMarkerAry.length = 0;  //removing the markers 
+			
+			$.mobile.loading( 'show' );
+			setTimeout( function(){ $.mobile.loading( 'hide' ); }, 700 );
+			
+			inProcess111 = 0;
+			
+		    service.nearbySearch(requesttapas, callback); }
+			
+		  else { 
+		  //currentMarkerAry will be whatever the last heading hit was, this is used to remove the last headings markers
+		  for (var i = 0; i < currentMarkerAry.length; i++) {
+		    currentMarkerAry[i].setMap(null);
+		  }
+		  currentMarkerAry.length = 0;  //removing the markers from dom for performance
+		  
+		  //this makes the markers for the heading appear and repopulates the shared array so the next heading knows what to remove
+		  for (var i = 0; i < tapasAry.length; i++) {
+		    tapasAry[i].setMap(map);
+		    currentMarkerAry.push( tapasAry[i] );
+		  }
+          }  //end else
+		  
+		});  //end click	
+
+
+
+				$('#mexican').click( function() { 
+
+            if ( inProcess111 == 0 ) { $(this).trigger( "collapse" ); 
+				$.mobile.loading( 'show', loadingmessage111 );
+				timerHolder111 = setInterval( function(){ if ( inProcess111 == 1 ) { $.mobile.loading( 'hide' ); clearInterval(timerHolder111); } }, 400);
+				return; 
+			}	
+			
+		  listid111 = '#mexican';   //this bit makes it so it scrolls back down to the heading of the item you clicked, such as thai restaurant
+		  listid222 = '#mexicanresults';
+		  aryidholder111 = 'mexican';  //this is used to signal which array to populate
+		  
+		  if ( $('#mexican').hasClass('buttonCS111') == false ) { 
+		  
+		  	for (var i = 0; i < currentMarkerAry.length; i++) {
+			  currentMarkerAry[i].setMap(null);
+			  }
+	        currentMarkerAry.length = 0;  //removing the markers 
+			
+			$.mobile.loading( 'show' );
+			setTimeout( function(){ $.mobile.loading( 'hide' ); }, 700 );
+			
+			inProcess111 = 0;
+			
+		    service.nearbySearch(requestmexican, callback); }
+			
+		  else { 
+		  //currentMarkerAry will be whatever the last heading hit was, this is used to remove the last headings markers
+		  for (var i = 0; i < currentMarkerAry.length; i++) {
+		    currentMarkerAry[i].setMap(null);
+		  }
+		  currentMarkerAry.length = 0;  //removing the markers from dom for performance
+		  
+		  //this makes the markers for the heading appear and repopulates the shared array so the next heading knows what to remove
+		  for (var i = 0; i < mexicanAry.length; i++) {
+		    mexicanAry[i].setMap(map);
+		    currentMarkerAry.push( mexicanAry[i] );
+		  }
+          }  //end else
+		  
+		});  //end click
+		
+		
+				$('#southamerican').click( function() { 
+
+            if ( inProcess111 == 0 ) { $(this).trigger( "collapse" ); 
+				$.mobile.loading( 'show', loadingmessage111 );
+				timerHolder111 = setInterval( function(){ if ( inProcess111 == 1 ) { $.mobile.loading( 'hide' ); clearInterval(timerHolder111); } }, 400);
+				return; 
+			}	
+			
+		  listid111 = '#southamerican';   //this bit makes it so it scrolls back down to the heading of the item you clicked, such as thai restaurant
+		  listid222 = '#southamericanresults';
+		  aryidholder111 = 'southamerican';  //this is used to signal which array to populate
+		  
+		  if ( $('#southamerican').hasClass('buttonCS111') == false ) { 
+		  
+		  	for (var i = 0; i < currentMarkerAry.length; i++) {
+			  currentMarkerAry[i].setMap(null);
+			  }
+	        currentMarkerAry.length = 0;  //removing the markers 
+			
+			$.mobile.loading( 'show' );
+			setTimeout( function(){ $.mobile.loading( 'hide' ); }, 700 );
+			
+			inProcess111 = 0;
+			
+		    service.nearbySearch(requestsouthamerican, callback); }
+			
+		  else { 
+		  //currentMarkerAry will be whatever the last heading hit was, this is used to remove the last headings markers
+		  for (var i = 0; i < currentMarkerAry.length; i++) {
+		    currentMarkerAry[i].setMap(null);
+		  }
+		  currentMarkerAry.length = 0;  //removing the markers from dom for performance
+		  
+		  //this makes the markers for the heading appear and repopulates the shared array so the next heading knows what to remove
+		  for (var i = 0; i < southamericanAry.length; i++) {
+		    southamericanAry[i].setMap(map);
+		    currentMarkerAry.push( southamericanAry[i] );
+		  }
+          }  //end else
+		  
+		});  //end click		
+
+
+
+
+				$('#breakfast').click( function() { 
+
+            if ( inProcess111 == 0 ) { $(this).trigger( "collapse" ); 
+				$.mobile.loading( 'show', loadingmessage111 );
+				timerHolder111 = setInterval( function(){ if ( inProcess111 == 1 ) { $.mobile.loading( 'hide' ); clearInterval(timerHolder111); } }, 400);
+				return; 
+			}	
+			
+		  listid111 = '#breakfast';   //this bit makes it so it scrolls back down to the heading of the item you clicked, such as thai restaurant
+		  listid222 = '#breakfastresults';
+		  aryidholder111 = 'breakfast';  //this is used to signal which array to populate
+		  
+		  if ( $('#breakfast').hasClass('buttonCS111') == false ) { 
+		  
+		  	for (var i = 0; i < currentMarkerAry.length; i++) {
+			  currentMarkerAry[i].setMap(null);
+			  }
+	        currentMarkerAry.length = 0;  //removing the markers 
+			
+			$.mobile.loading( 'show' );
+			setTimeout( function(){ $.mobile.loading( 'hide' ); }, 700 );
+			
+			inProcess111 = 0;
+			
+		    service.nearbySearch(requestbreakfast, callback); }
+			
+		  else { 
+		  //currentMarkerAry will be whatever the last heading hit was, this is used to remove the last headings markers
+		  for (var i = 0; i < currentMarkerAry.length; i++) {
+		    currentMarkerAry[i].setMap(null);
+		  }
+		  currentMarkerAry.length = 0;  //removing the markers from dom for performance
+		  
+		  //this makes the markers for the heading appear and repopulates the shared array so the next heading knows what to remove
+		  for (var i = 0; i < breakfastAry.length; i++) {
+		    breakfastAry[i].setMap(map);
+		    currentMarkerAry.push( breakfastAry[i] );
+		  }
+          }  //end else
+		  
+		});  //end click
+		
+		
+				$('#bagel').click( function() { 
+
+            if ( inProcess111 == 0 ) { $(this).trigger( "collapse" ); 
+				$.mobile.loading( 'show', loadingmessage111 );
+				timerHolder111 = setInterval( function(){ if ( inProcess111 == 1 ) { $.mobile.loading( 'hide' ); clearInterval(timerHolder111); } }, 400);
+				return; 
+			}	
+			
+		  listid111 = '#bagel';   //this bit makes it so it scrolls back down to the heading of the item you clicked, such as thai restaurant
+		  listid222 = '#bagelresults';
+		  aryidholder111 = 'bagel';  //this is used to signal which array to populate
+		  
+		  if ( $('#bagel').hasClass('buttonCS111') == false ) { 
+		  
+		  	for (var i = 0; i < currentMarkerAry.length; i++) {
+			  currentMarkerAry[i].setMap(null);
+			  }
+	        currentMarkerAry.length = 0;  //removing the markers 
+			
+			$.mobile.loading( 'show' );
+			setTimeout( function(){ $.mobile.loading( 'hide' ); }, 700 );
+			
+			inProcess111 = 0;
+			
+		    service.nearbySearch(requestbagel, callback); }
+			
+		  else { 
+		  //currentMarkerAry will be whatever the last heading hit was, this is used to remove the last headings markers
+		  for (var i = 0; i < currentMarkerAry.length; i++) {
+		    currentMarkerAry[i].setMap(null);
+		  }
+		  currentMarkerAry.length = 0;  //removing the markers from dom for performance
+		  
+		  //this makes the markers for the heading appear and repopulates the shared array so the next heading knows what to remove
+		  for (var i = 0; i < bagelAry.length; i++) {
+		    bagelAry[i].setMap(map);
+		    currentMarkerAry.push( bagelAry[i] );
+		  }
+          }  //end else
+		  
+		});  //end click	
+
+
+
+
+
+				$('#bakery').click( function() { 
+
+            if ( inProcess111 == 0 ) { $(this).trigger( "collapse" ); 
+				$.mobile.loading( 'show', loadingmessage111 );
+				timerHolder111 = setInterval( function(){ if ( inProcess111 == 1 ) { $.mobile.loading( 'hide' ); clearInterval(timerHolder111); } }, 400);
+				return; 
+			}	
+			
+		  listid111 = '#bakery';   //this bit makes it so it scrolls back down to the heading of the item you clicked, such as thai restaurant
+		  listid222 = '#bakeryresults';
+		  aryidholder111 = 'bakery';  //this is used to signal which array to populate
+		  
+		  if ( $('#bakery').hasClass('buttonCS111') == false ) { 
+		  
+		  	for (var i = 0; i < currentMarkerAry.length; i++) {
+			  currentMarkerAry[i].setMap(null);
+			  }
+	        currentMarkerAry.length = 0;  //removing the markers 
+			
+			$.mobile.loading( 'show' );
+			setTimeout( function(){ $.mobile.loading( 'hide' ); }, 700 );
+			
+			inProcess111 = 0;
+			
+		    service.nearbySearch(requestbakery, callback); }
+			
+		  else { 
+		  //currentMarkerAry will be whatever the last heading hit was, this is used to remove the last headings markers
+		  for (var i = 0; i < currentMarkerAry.length; i++) {
+		    currentMarkerAry[i].setMap(null);
+		  }
+		  currentMarkerAry.length = 0;  //removing the markers from dom for performance
+		  
+		  //this makes the markers for the heading appear and repopulates the shared array so the next heading knows what to remove
+		  for (var i = 0; i < bakeryAry.length; i++) {
+		    bakeryAry[i].setMap(map);
+		    currentMarkerAry.push( bakeryAry[i] );
+		  }
+          }  //end else
+		  
+		});  //end click
+
+
+				$('#bar').click( function() { 
+
+            if ( inProcess111 == 0 ) { $(this).trigger( "collapse" ); 
+				$.mobile.loading( 'show', loadingmessage111 );
+				timerHolder111 = setInterval( function(){ if ( inProcess111 == 1 ) { $.mobile.loading( 'hide' ); clearInterval(timerHolder111); } }, 400);
+				return; 
+			}	
+			
+		  listid111 = '#bar';   //this bit makes it so it scrolls back down to the heading of the item you clicked, such as thai restaurant
+		  listid222 = '#barresults';
+		  aryidholder111 = 'bar';  //this is used to signal which array to populate
+		  
+		  if ( $('#bar').hasClass('buttonCS111') == false ) { 
+		  
+		  	for (var i = 0; i < currentMarkerAry.length; i++) {
+			  currentMarkerAry[i].setMap(null);
+			  }
+	        currentMarkerAry.length = 0;  //removing the markers 
+			
+			$.mobile.loading( 'show' );
+			setTimeout( function(){ $.mobile.loading( 'hide' ); }, 700 );
+			
+			inProcess111 = 0;
+			
+		    service.nearbySearch(requestbar, callback); }
+			
+		  else { 
+		  //currentMarkerAry will be whatever the last heading hit was, this is used to remove the last headings markers
+		  for (var i = 0; i < currentMarkerAry.length; i++) {
+		    currentMarkerAry[i].setMap(null);
+		  }
+		  currentMarkerAry.length = 0;  //removing the markers from dom for performance
+		  
+		  //this makes the markers for the heading appear and repopulates the shared array so the next heading knows what to remove
+		  for (var i = 0; i < barAry.length; i++) {
+		    barAry[i].setMap(map);
+		    currentMarkerAry.push( barAry[i] );
+		  }
+          }  //end else
+		  
+		});  //end click
+
+
+				$('#cafe').click( function() { 
+
+            if ( inProcess111 == 0 ) { $(this).trigger( "collapse" ); 
+				$.mobile.loading( 'show', loadingmessage111 );
+				timerHolder111 = setInterval( function(){ if ( inProcess111 == 1 ) { $.mobile.loading( 'hide' ); clearInterval(timerHolder111); } }, 400);
+				return; 
+			}	
+			
+		  listid111 = '#cafe';   //this bit makes it so it scrolls back down to the heading of the item you clicked, such as thai restaurant
+		  listid222 = '#caferesults';
+		  aryidholder111 = 'cafe';  //this is used to signal which array to populate
+		  
+		  if ( $('#cafe').hasClass('buttonCS111') == false ) { 
+		  
+		  	for (var i = 0; i < currentMarkerAry.length; i++) {
+			  currentMarkerAry[i].setMap(null);
+			  }
+	        currentMarkerAry.length = 0;  //removing the markers 
+			
+			$.mobile.loading( 'show' );
+			setTimeout( function(){ $.mobile.loading( 'hide' ); }, 700 );
+			
+			inProcess111 = 0;
+			
+		    service.nearbySearch(requestcafe, callback); }
+			
+		  else { 
+		  //currentMarkerAry will be whatever the last heading hit was, this is used to remove the last headings markers
+		  for (var i = 0; i < currentMarkerAry.length; i++) {
+		    currentMarkerAry[i].setMap(null);
+		  }
+		  currentMarkerAry.length = 0;  //removing the markers from dom for performance
+		  
+		  //this makes the markers for the heading appear and repopulates the shared array so the next heading knows what to remove
+		  for (var i = 0; i < cafeAry.length; i++) {
+		    cafeAry[i].setMap(map);
+		    currentMarkerAry.push( cafeAry[i] );
+		  }
+          }  //end else
+		  
+		});  //end click
+
+
+				$('#finedining').click( function() { 
+
+            if ( inProcess111 == 0 ) { $(this).trigger( "collapse" ); 
+				$.mobile.loading( 'show', loadingmessage111 );
+				timerHolder111 = setInterval( function(){ if ( inProcess111 == 1 ) { $.mobile.loading( 'hide' ); clearInterval(timerHolder111); } }, 400);
+				return; 
+			}	
+			
+		  listid111 = '#finedining';   //this bit makes it so it scrolls back down to the heading of the item you clicked, such as thai restaurant
+		  listid222 = '#finediningresults';
+		  aryidholder111 = 'finedining';  //this is used to signal which array to populate
+		  
+		  if ( $('#finedining').hasClass('buttonCS111') == false ) { 
+		  
+		  	for (var i = 0; i < currentMarkerAry.length; i++) {
+			  currentMarkerAry[i].setMap(null);
+			  }
+	        currentMarkerAry.length = 0;  //removing the markers 
+			
+			$.mobile.loading( 'show' );
+			setTimeout( function(){ $.mobile.loading( 'hide' ); }, 700 );
+			
+			inProcess111 = 0;
+			
+		    service.nearbySearch(requestfinedining, callback); }
+			
+		  else { 
+		  //currentMarkerAry will be whatever the last heading hit was, this is used to remove the last headings markers
+		  for (var i = 0; i < currentMarkerAry.length; i++) {
+		    currentMarkerAry[i].setMap(null);
+		  }
+		  currentMarkerAry.length = 0;  //removing the markers from dom for performance
+		  
+		  //this makes the markers for the heading appear and repopulates the shared array so the next heading knows what to remove
+		  for (var i = 0; i < finediningAry.length; i++) {
+		    finediningAry[i].setMap(map);
+		    currentMarkerAry.push( finediningAry[i] );
+		  }
+          }  //end else
+		  
+		});  //end click
+
+
+				$('#frozenyogurt').click( function() { 
+
+            if ( inProcess111 == 0 ) { $(this).trigger( "collapse" ); 
+				$.mobile.loading( 'show', loadingmessage111 );
+				timerHolder111 = setInterval( function(){ if ( inProcess111 == 1 ) { $.mobile.loading( 'hide' ); clearInterval(timerHolder111); } }, 400);
+				return; 
+			}	
+			
+		  listid111 = '#frozenyogurt';   //this bit makes it so it scrolls back down to the heading of the item you clicked, such as thai restaurant
+		  listid222 = '#frozenyogurtresults';
+		  aryidholder111 = 'frozenyogurt';  //this is used to signal which array to populate
+		  
+		  if ( $('#frozenyogurt').hasClass('buttonCS111') == false ) { 
+		  
+		  	for (var i = 0; i < currentMarkerAry.length; i++) {
+			  currentMarkerAry[i].setMap(null);
+			  }
+	        currentMarkerAry.length = 0;  //removing the markers 
+			
+			$.mobile.loading( 'show' );
+			setTimeout( function(){ $.mobile.loading( 'hide' ); }, 700 );
+			
+			inProcess111 = 0;
+			
+		    service.nearbySearch(requestfrozenyogurt, callback); }
+			
+		  else { 
+		  //currentMarkerAry will be whatever the last heading hit was, this is used to remove the last headings markers
+		  for (var i = 0; i < currentMarkerAry.length; i++) {
+		    currentMarkerAry[i].setMap(null);
+		  }
+		  currentMarkerAry.length = 0;  //removing the markers from dom for performance
+		  
+		  //this makes the markers for the heading appear and repopulates the shared array so the next heading knows what to remove
+		  for (var i = 0; i < frozenyogurtAry.length; i++) {
+		    frozenyogurtAry[i].setMap(map);
+		    currentMarkerAry.push( frozenyogurtAry[i] );
+		  }
+          }  //end else
+		  
+		});  //end click
+
+
+				$('#icecream').click( function() { 
+
+            if ( inProcess111 == 0 ) { $(this).trigger( "collapse" ); 
+				$.mobile.loading( 'show', loadingmessage111 );
+				timerHolder111 = setInterval( function(){ if ( inProcess111 == 1 ) { $.mobile.loading( 'hide' ); clearInterval(timerHolder111); } }, 400);
+				return; 
+			}	
+			
+		  listid111 = '#icecream';   //this bit makes it so it scrolls back down to the heading of the item you clicked, such as thai restaurant
+		  listid222 = '#icecreamresults';
+		  aryidholder111 = 'icecream';  //this is used to signal which array to populate
+		  
+		  if ( $('#icecream').hasClass('buttonCS111') == false ) { 
+		  
+		  	for (var i = 0; i < currentMarkerAry.length; i++) {
+			  currentMarkerAry[i].setMap(null);
+			  }
+	        currentMarkerAry.length = 0;  //removing the markers 
+			
+			$.mobile.loading( 'show' );
+			setTimeout( function(){ $.mobile.loading( 'hide' ); }, 700 );
+			
+			inProcess111 = 0;
+			
+		    service.nearbySearch(requesticecream, callback); }
+			
+		  else { 
+		  //currentMarkerAry will be whatever the last heading hit was, this is used to remove the last headings markers
+		  for (var i = 0; i < currentMarkerAry.length; i++) {
+		    currentMarkerAry[i].setMap(null);
+		  }
+		  currentMarkerAry.length = 0;  //removing the markers from dom for performance
+		  
+		  //this makes the markers for the heading appear and repopulates the shared array so the next heading knows what to remove
+		  for (var i = 0; i < icecreamAry.length; i++) {
+		    icecreamAry[i].setMap(map);
+		    currentMarkerAry.push( icecreamAry[i] );
+		  }
+          }  //end else
+		  
+		});  //end click
+
+
+				$('#veggie').click( function() { 
+
+            if ( inProcess111 == 0 ) { $(this).trigger( "collapse" ); 
+				$.mobile.loading( 'show', loadingmessage111 );
+				timerHolder111 = setInterval( function(){ if ( inProcess111 == 1 ) { $.mobile.loading( 'hide' ); clearInterval(timerHolder111); } }, 400);
+				return; 
+			}	
+			
+		  listid111 = '#veggie';   //this bit makes it so it scrolls back down to the heading of the item you clicked, such as thai restaurant
+		  listid222 = '#veggieresults';
+		  aryidholder111 = 'veggie';  //this is used to signal which array to populate
+		  
+		  if ( $('#veggie').hasClass('buttonCS111') == false ) { 
+		  
+		  	for (var i = 0; i < currentMarkerAry.length; i++) {
+			  currentMarkerAry[i].setMap(null);
+			  }
+	        currentMarkerAry.length = 0;  //removing the markers 
+			
+			$.mobile.loading( 'show' );
+			setTimeout( function(){ $.mobile.loading( 'hide' ); }, 700 );
+			
+			inProcess111 = 0;
+			
+		    service.nearbySearch(requestveggie, callback); }
+			
+		  else { 
+		  //currentMarkerAry will be whatever the last heading hit was, this is used to remove the last headings markers
+		  for (var i = 0; i < currentMarkerAry.length; i++) {
+		    currentMarkerAry[i].setMap(null);
+		  }
+		  currentMarkerAry.length = 0;  //removing the markers from dom for performance
+		  
+		  //this makes the markers for the heading appear and repopulates the shared array so the next heading knows what to remove
+		  for (var i = 0; i < veggieAry.length; i++) {
+		    veggieAry[i].setMap(map);
+		    currentMarkerAry.push( veggieAry[i] );
+		  }
+          }  //end else
+		  
+		});  //end click
+
+
+				$('#opennow').click( function() { 
+
+            if ( inProcess111 == 0 ) { $(this).trigger( "collapse" ); 
+				$.mobile.loading( 'show', loadingmessage111 );
+				timerHolder111 = setInterval( function(){ if ( inProcess111 == 1 ) { $.mobile.loading( 'hide' ); clearInterval(timerHolder111); } }, 400);
+				return; 
+			}	
+			
+		  listid111 = '#opennow';   //this bit makes it so it scrolls back down to the heading of the item you clicked, such as thai restaurant
+		  listid222 = '#opennowresults';
+		  aryidholder111 = 'opennow';  //this is used to signal which array to populate
+		  
+		  if ( $('#opennow').hasClass('buttonCS111') == false ) { 
+		  
+		  	for (var i = 0; i < currentMarkerAry.length; i++) {
+			  currentMarkerAry[i].setMap(null);
+			  }
+	        currentMarkerAry.length = 0;  //removing the markers 
+			
+			$.mobile.loading( 'show' );
+			setTimeout( function(){ $.mobile.loading( 'hide' ); }, 700 );
+			
+			inProcess111 = 0;
+			
+		    service.nearbySearch(requestopennow, callback); }
+			
+		  else { 
+		  //currentMarkerAry will be whatever the last heading hit was, this is used to remove the last headings markers
+		  for (var i = 0; i < currentMarkerAry.length; i++) {
+		    currentMarkerAry[i].setMap(null);
+		  }
+		  currentMarkerAry.length = 0;  //removing the markers from dom for performance
+		  
+		  //this makes the markers for the heading appear and repopulates the shared array so the next heading knows what to remove
+		  for (var i = 0; i < opennowAry.length; i++) {
+		    opennowAry[i].setMap(map);
+		    currentMarkerAry.push( opennowAry[i] );
+		  }
+          }  //end else
+		  
+		});  //end click		
+
+
+
+		
+		
+		
+		
+$( "#footerInfo111" ).on( "popupafteropen", function( event, ui ) {
+		var tempoffset = $('#topsection111').offset();
+		tempoffset = tempoffset.top - 55 ;
+		  $("html, body").animate({ scrollTop: tempoffset  }, "slow");
+} );
+		
+	 
+	 	$(document).on('click', '#closer111', function(popup3) {
+		  $('#popup1').hide();
+		  
+		  //this bit makes it so it scrolls back down to the heading of the item you clicked, such as thai restaurant
+		  var offsetter = $(listid111).offset();
+		  yPos111 = offsetter.top - 50;
+
+		  $("html, body").animate({ scrollTop: yPos111 }, "slow");  //this is if you want to scroll back to the item or heading clicked
+        });
+		
+
+
+		$('.topsection112').click( function() { 
+		var tempoffset = $('#topsection111').offset();
+		tempoffset = tempoffset.top - 55 ;
+		  $("html, body").animate({ scrollTop: tempoffset  }, "slow");
+		  return false;
+		});
+		
+		$('#aboutapp112').click( function() { 
+		var tempoffset = $('#aboutapp111').offset();
+		tempoffset = tempoffset.top - 15 ;
+		  $("html, body").animate({ scrollTop: tempoffset  }, "slow");
+		  return false;
+		});
+
+		$('#usingapp112').click( function() { 
+		var tempoffset = $('#usingapp111').offset();
+		tempoffset = tempoffset.top - 15 ;
+		  $("html, body").animate({ scrollTop: tempoffset  }, "slow");
+		  return false;
+		});
+
+		$('#businessowners112').click( function() { 
+		var tempoffset = $('#businessowners111').offset();
+		tempoffset = tempoffset.top - 15 ;
+		  $("html, body").animate({ scrollTop: tempoffset  }, "slow");
+		  return false;
+		});
+
+		$('#terms112').click( function() { 
+		var tempoffset = $('#terms111').offset();
+		tempoffset = tempoffset.top - 15 ;
+		  $("html, body").animate({ scrollTop: tempoffset   }, "slow");
+		  return false;
+		});		
+		
+		$('#privacypolicy112').click( function() { 
+		var tempoffset = $('#privacypolicy111').offset();
+		tempoffset = tempoffset.top - 15 ;
+		  $("html, body").animate({ scrollTop: tempoffset  }, "slow");
+		  return false;
+		});
+		
+		
+		//THIS SEEMS TO WORKING JUST FINE!!!!!!!!!!!!!!!!!!
+		//this all here is to try and collapse the inner items
+		 $("h2.ui-collapsible-heading").bind ("click", function (event){
+		   $("h3.ui-collapsible-heading").trigger( "collapse" );	
+         });
+		 
+		
+  
+}  //end onload
+})();  //end self executing code encapsulating function
+	
+	</script>
+	
+	
+	
+	
+	
+  </head>
+  
+  
+  <body>
+  
+  
+
+  <div data-role="page">
+
+	<div data-role="header" data-theme="g">
+	  
+		<h1 id="headerstyle111">Fort Collins Restaurant Finder</h1>
+		
+	</div><!-- /header -->
+	
+	<div id="map"></div>
+	
+	<span id="smallerText111">Quick Zoom</span>
+	<div id="QZoom111" data-role="controlgroup" data-type="horizontal" data-mini="true">
+	  <input type="button" value="City" id="fc111" data-mini="true" data-inline="true"/>
+	  <input type="button" value="Old Town" id="oldtown" data-mini="true" data-inline="true"/>
+	  <input type="button" value="Campus W" id="campuswest" data-mini="true" data-inline="true"/>
+	  <input type="button" value="South" id="harmonyrd" data-mini="true" data-inline="true"/>
+	</div>
+	<br>
+	
+	<div id="popup1"></div>
+	
+
+	<div data-role="content">
+
+
+
+
+
+<div data-role="collapsible-set" data-theme="b" data-content-theme="d">
+
+
+
+    <div data-role="collapsible">
+        <h2>African</h2>
+		
+		<div data-role="collapsible-set" data-theme="a" data-content-theme="d">
+
+			<div data-role="collapsible">
+				<h3 id="african">African</h3>
+				    <ul id="africanresults" data-role="listview" data-filter="true">
+					</ul>
+			</div>
+			
+		</div>
+    </div>
+	
+	
+	
+    <div data-role="collapsible">
+        <h2>American</h2>
+		
+		<div data-role="collapsible-set" data-theme="a" data-content-theme="d">
+
+			<div data-role="collapsible">
+				<h3 id="american">American</h3>
+				    <ul id="americanresults" data-role="listview" data-filter="true">
+					</ul>
+			</div>
+			<div data-role="collapsible">
+				<h3 id="bistro">Bistro</h3>
+				    <ul id="bistroresults" data-role="listview" data-filter="true">
+					</ul>
+			</div>	
+			<div data-role="collapsible">
+				<h3 id="grill">Grill (American/Other)</h3>
+				    <ul id="grillresults" data-role="listview" data-filter="true">
+					</ul>
+			</div>
+			<div data-role="collapsible">
+				<h3 id="pizza">Pizza</h3>
+				    <ul id="pizzaresults" data-role="listview" data-filter="true">
+					</ul>
+			</div>			
+			<div data-role="collapsible">
+				<h3 id="pub">Pub</h3>
+				    <ul id="pubresults" data-role="listview" data-filter="true">
+					</ul>
+			</div>			
+			<div data-role="collapsible">
+				<h3 id="sandwich">Sandwich/Subs/Deli</h3>
+				    <ul id="sandwichresults" data-role="listview" data-filter="true">
+					</ul>
+			</div>
+			<div data-role="collapsible">
+				<h3 id="southern">Southern</h3>
+				    <ul id="southernresults" data-role="listview" data-filter="true">
+					</ul>
+			</div>			
+			
+		</div>
+    </div>	
+
+
+
+
+    <div data-role="collapsible">
+        <h2>Asian</h2>
+		
+		<div data-role="collapsible-set" data-theme="a" data-content-theme="d">
+		
+			<div data-role="collapsible">
+				<h3 id="allasian">Asian</h3>
+				    <ul id="allasianresults" data-role="listview" data-filter="true">
+					</ul>
+			</div>
+			<div data-role="collapsible">
+				<h3 id="chinese">Chinese</h3>
+				    <ul id="chineseresults" data-role="listview" data-filter="true">
+					</ul>
+			</div>
+			<div data-role="collapsible">
+				<h3 id="indian">Indian</h3>
+				    <ul id="indianresults" data-role="listview" data-filter="true">
+					</ul>
+			</div>
+			<div data-role="collapsible">
+				<h3 id="japanese">Japanese</h3>
+				    <ul id="japaneseresults" data-role="listview" data-filter="true">
+					</ul>
+			</div>
+			<div data-role="collapsible">
+				<h3 id="korean">Korean</h3>
+				    <ul id="koreanresults" data-role="listview" data-filter="true">
+					</ul>
+			</div>
+			<div data-role="collapsible">
+				<h3 id="middleeastern">Middle Eastern</h3>
+				    <ul id="middleeasternresults" data-role="listview" data-filter="true">
+					</ul>
+			</div>	
+			<div data-role="collapsible">
+				<h3 id="mongolian">Mongolian</h3>
+				    <ul id="mongolianresults" data-role="listview" data-filter="true">
+					</ul>
+			</div>
+			<div data-role="collapsible">
+				<h3 id="nepalese">Nepalese</h3>
+				    <ul id="nepaleseresults" data-role="listview" data-filter="true">
+					</ul>
+			</div>			
+			<div data-role="collapsible">
+				<h3 id="thai">Thai</h3>
+				    <ul id="thairesults" data-role="listview" data-filter="true">
+					</ul>
+			</div>
+			<div data-role="collapsible">
+				<h3 id="vietnamese">Vietnamese</h3>
+				    <ul id="vietnameseresults" data-role="listview" data-filter="true">
+					</ul>
+			</div>
+			
+		</div>
+    </div>
+	
+	
+	
+    <div data-role="collapsible">
+        <h2>European</h2>
+		
+		<div data-role="collapsible-set" data-theme="a" data-content-theme="d">
+
+			<div data-role="collapsible">
+				<h3 id="british">British</h3>
+				    <ul id="britishresults" data-role="listview" data-filter="true">
+					</ul>
+			</div>
+			<div data-role="collapsible">
+				<h3 id="french">French</h3>
+				    <ul id="frenchresults" data-role="listview" data-filter="true">
+					</ul>
+			</div>	
+			<div data-role="collapsible">
+				<h3 id="greek">Greek</h3>
+				    <ul id="greekresults" data-role="listview" data-filter="true">
+					</ul>
+			</div>
+			<div data-role="collapsible">
+				<h3 id="italian">Italian</h3>
+				    <ul id="italianresults" data-role="listview" data-filter="true">
+					</ul>
+			</div>			
+			<div data-role="collapsible">
+				<h3 id="mediterranean">Mediterranean</h3>
+				    <ul id="mediterraneanresults" data-role="listview" data-filter="true">
+					</ul>
+			</div>			
+			<div data-role="collapsible">
+				<h3 id="tapas">Tapas</h3>
+				    <ul id="tapasresults" data-role="listview" data-filter="true">
+					</ul>
+			</div>			
+			
+		</div>
+    </div>		
+	
+	
+	
+	
+    <div data-role="collapsible">
+        <h2>The Americas (not U.S.)</h2>
+		
+		<div data-role="collapsible-set" data-theme="a" data-content-theme="d">
+
+			<div data-role="collapsible">
+				<h3 id="mexican">Mexican</h3>
+				    <ul id="mexicanresults" data-role="listview" data-filter="true">
+					</ul>
+			</div>
+			<div data-role="collapsible">
+				<h3 id="southamerican">South/Central American</h3>
+				    <ul id="southamericanresults" data-role="listview" data-filter="true">
+					</ul>
+			</div>		
+			
+		</div>
+    </div>	
+	
+	
+	
+    <div data-role="collapsible">
+        <h2>Breakfast</h2>
+		
+		<div data-role="collapsible-set" data-theme="a" data-content-theme="d">
+
+			<div data-role="collapsible">
+				<h3 id="breakfast">Breakfast</h3>
+				    <ul id="breakfastresults" data-role="listview" data-filter="true">
+					</ul>
+			</div>
+			<div data-role="collapsible">
+				<h3 id="bagel">Bagels</h3>
+				    <ul id="bagelresults" data-role="listview" data-filter="true">
+					</ul>
+			</div>	
+			
+		</div>
+    </div>		
+
+
+	
+
+
+    <div data-role="collapsible">
+        <h2>Other Categories</h2>
+		
+		<div data-role="collapsible-set" data-theme="a" data-content-theme="d">
+
+			<div data-role="collapsible">
+				<h3 id="bakery">Bakery</h3>
+				    <ul id="bakeryresults" data-role="listview" data-filter="true">
+					</ul>
+			</div>
+			<div data-role="collapsible">
+				<h3 id="bar">Bar</h3>
+				    <ul id="barresults" data-role="listview" data-filter="true">
+					</ul>
+			</div>	
+			<div data-role="collapsible">
+				<h3 id="cafe">Cafe/Coffee/Tea</h3>
+				    <ul id="caferesults" data-role="listview" data-filter="true">
+					</ul>
+			</div>
+			<div data-role="collapsible">
+				<h3 id="finedining">Fine Dining</h3>
+				    <ul id="finediningresults" data-role="listview" data-filter="true">
+					</ul>
+			</div>			
+			<div data-role="collapsible">
+				<h3 id="frozenyogurt">Frozen Yogurt</h3>
+				    <ul id="frozenyogurtresults" data-role="listview" data-filter="true">
+					</ul>
+			</div>			
+			<div data-role="collapsible">
+				<h3 id="icecream">Ice Cream</h3>
+				    <ul id="icecreamresults" data-role="listview" data-filter="true">
+					</ul>
+			</div>
+			<div data-role="collapsible">
+				<h3 id="veggie">Vegetarian Friendly</h3>
+				    <ul id="veggieresults" data-role="listview" data-filter="true">
+					</ul>
+			</div>	
+			<div data-role="collapsible">
+				<h3 id="opennow">Open Right Now!</h3>
+				  <a href="#popupInfo113" id="popupInfo114" data-rel="popup" data-role="button" class="ui-icon-alt" data-inline="true" data-transition="pop" data-icon="info" data-theme="e" data-iconpos="notext">About Open Right Now</a>
+				    <ul id="opennowresults" data-role="listview" data-filter="true">
+					</ul>
+			</div>				
+			
+		</div>
+    </div>	
+
+	
+	
+</div>
+<br><br><br><br><br><br>
+
+
+
+<div data-role="popup" id="popupInfo111">
+	<p>If you are using a mobile device with a phone, you can click the telephone number to place a call</p>
+</div>
+
+<div data-role="popup" id="popupInfo113">
+	<p>This returns a list of restaurants open right now. This feature is most useful for late night dining. During the day almost every restaurant is open and it will not list all of them.</p>
+</div>
+
+
+
+<div data-role="popup" id="footerInfo111" data-overlay-theme="a">
+  <a href="#" id="closer112" data-role="button" data-rel="back" data-theme="a" data-icon="delete" data-iconpos="notext" class="ui-btn-right">Close</a>
+
+  
+ <br><br><span id="topsection111">Scroll To</span>
+<a href="" id="aboutapp112">About the Web App</a><br>
+<a href="" id="usingapp112">Using the App</a><br>
+<a href="" id="businessowners112">Business Owners</a><br>
+<a href="" id="terms112">Terms of Use</a><br>
+<a href="" id="privacypolicy112">Privacy Policy</a><br><br>  
+  
+
+<h5 id="aboutapp111">About the Web App:</h5>
+<p>
+This app was designed to work equally well on desktops, tablets and smartphones. On 
+smartphones and tablets, the functionality is similar to native apps except that it is used 
+in the browser. Just bookmark the webpage in the browser instead of downloading anything. An 
+internet connection is always required.
+</p>
+<p>
+This web app uses Google data for the restaurants listed. They are displayed in order of 
+prominence, which can be affected by the ranking of the place in Google's index, global 
+popularity and other factors. So essentially the most popular results are listed first as 
+well as the most relevant results. Some restaurant headings will return results that don't 
+quite fit because the business owner's listed their establishment inaccurately and/or other 
+factors. Only up to 60 restaurant for each heading will be displayed.
+</p>
+<p>
+Is there a problem with information? If you see inaccurate results or something that 
+shouldn't be there, you can follow the link to the Google+ page to report a problem, follow 
+the link on the map or you can check out 
+<a href="http://support.google.com/maps/bin/answer.py?hl=en&answer=162873" target="_blank">this page</a>. As 
+this app relies on Google data, any inaccurate information has to be reported to Google.
+</p>
+<a href="" class="topsection112">Back to Top</a><br><br>
+
+
+<h5 id="usingapp111">Using the App:</h5>
+<p>
+Clicking on the restaurant headings will retrieve results for that type of restaurant and 
+display them on the map. You can click the restaurant names in the list to get more 
+information about that restaurant. You can also click the markers to bring up the same 
+information. If you want to find a specific kind of restaurant in a specific part of town, 
+click a restaurant heading and then either zoom to that part of town or use the quick zoom 
+feature to see the restaurants in that part of town. Certain restaurant headings with many 
+restaurants could take a couple of seconds to load all of them during which time the buttons 
+are disabled. This app does not work with javascript disabled.
+</p>
+<a href="" class="topsection112">Back to Top</a><br><br>
+
+
+<h5 id="businessowners111">Business Owners:</h5>
+<p>
+For an establishment to be found on this app, the establishment has to be entered into Google 
+Places for Business, which is free. To do that you can follow this link to 
+<a href="http://www.google.com/business/placesforbusiness/">Google Places for Business</a>. 
+The restaurant headings are really just a function of how many restaurants there are for a 
+certain region, be it continent or country. The architecture of the app is geared towards 
+region and place so you should attempt to be found that way. The goal of the app is to be as 
+inclusive as possible while still being easy to navigate. If you feel your establishment is 
+really falling through the cracks, for instance it is cuisine from a country that is not 
+especially popular in the U.S., then it may be possible to include a separate heading. If a 
+restaurant is not being found in the top results or is not in the top 60 results, there is no 
+way to change that in this app.
+</p>
+<a href="" class="topsection112">Back to Top</a><br><br>
+
+
+<h5 id="terms111">Terms of Use:</h5>
+<p>
+	By using this application, you agree to be bound by <a href="http://www.google.com/intl/en/policies/terms/">Google's Terms of Use</a> 
+	and <a href="http://www.google.com/intl/en-US_US/help/terms_maps.html">Google Maps/Earth Additional Terms of Service</a>.
+</p>
+
+<p>
+All content provided on this website is for general informational purposes only and should 
+not be taken as advice or professional advice of any kind. This website endeavors to provide correct information, 
+however the owner of this site makes no representations as to the accuracy or completeness of any information on this site or 
+found by following any link on this site. Site visitor should do their own research before 
+taken any action concerning the information on this site. Any action by you concerning the 
+information on this site or reliance that you place on such information is strictly at your 
+own risk. The owner will not be liable for any errors or omissions in this information nor 
+for the availability of this information. The owner will not be liable for any losses, 
+injuries, or damages from the display or use of this information. This website displays data from 
+other sources that it has no control over and will not be held responsible for that data or for any action taken by the user based on the data. 
+On this website, there are 
+links to other websites which are not under this website's control. This website has no 
+control over the contents or availability of the sites linked to through this website. Any 
+use of links on this site or any action taken concerning the links on this site is strictly 
+at your own risk.  Displayed links should not be taken as a recommendation or endorsement of 
+any content or views found in them. This policy is subject to change at anytime.
+</p>
+<a href="" class="topsection112">Back to Top</a><br><br>
+
+<h5 id="privacypolicy111">Privacy Policy:</h5>
+<p>
+	This application uses the Google Maps API and as such the <a href="http://www.google.com/privacy.html">Google Privacy Policy</a> 
+	applies. This application does not collect any personal data but has links to webpages that may contain personal data that will be bound by privacy 
+	policies of those websites. This application shows data retrieved from the Google Places Library of the Google Maps API which is bound by the terms which can be found by following the links listed above.
+</p>
+
+<p>
+Third party vendors, including Google, use cookies to serve ads based on a user's prior visits to this website. 
+Google's use of the DART cookie enables it and its partners to serve ads to users based 
+on their visit to this site and/or other sites on the Internet. Users may opt out of the use of the DART cookie by visiting the 
+<a href="http://www.google.com/policies/privacy/ads/">advertising opt-out page</a>. 
+Third-party vendors and ad networks may also be used to serve ads to visitors of this 
+site. <a href="https://support.google.com/dfp_sb/bin/answer.py?hl=en&answer=94149">Possible third party vendors.</a> 
+Users may visit those websites to opt out of cookies (if the vendor or ad network offers this capability). 
+Users can opt out of some, but not all, of these cookies in one location at the Network Advertising Initiative opt-out website 
+<a href="http://www.networkadvertising.org/choices/">here</a>.
+</p>
+<a href="" class="topsection112">Back to Top</a><br><br>
+</div>
+
+
+    
+  
+	
+	</div><!-- /content -->
+
+	<div data-role="footer" class="ui-bar">
+	
+	<div id"footercontainer111">
+		<a href="#footerInfo111" id="popupInfo115" data-rel="popup" data-role="button" class="ui-icon-alt" data-inline="true" data-transition="pop" data-position-to="window" class="ui-btn-right" data-icon="info" data-theme="e" data-iconpos="notext">Info</a>
+	 </div>
+	</div><!-- /footer -->
+</div><!-- /page -->
+  
+
+  
+  </body>
+</html>
